@@ -199,6 +199,7 @@ reduced_possible_values <- function(letter, possible_values = all_possible_value
   
   letter_possibles <- letter_possibles[letter_possibles < smallest_larger]
   letter_possibles <- letter_possibles[letter_possibles > largest_smaller]
+
   return(letter_possibles)
 }
 
@@ -208,8 +209,56 @@ reduced_possible_values("r")
 
 for(i in 1:100) all_possible_values <- lapply(all_letters, reduced_possible_values)
 
-reduce_possibilities <- function(values, the_letters = all_letters, times = 21) {
+reduce_possibilities <- function(values, the_letters = all_letters, times = 5) {
   for(i in 1:times) values <- lapply(the_letters, reduced_possible_values, values)
+ 
+  minimum_values <- lapply(values, min)
+  maximum_values <- lapply(values, max)
+  new_minimum_values <- minimum_values
+  new_maximum_values <- maximum_values
+  for(i in 1:10) {
+    new_minimum_values <- within(new_minimum_values, {a <- max(a, b + f, b + h, c + e)})
+    new_minimum_values <- within(new_minimum_values, {b <- max(b, f + g, c + d, m + o)})
+    new_minimum_values <- within(new_minimum_values, {c <- max(c, d + e)})
+    new_minimum_values <- within(new_minimum_values, {e <- max(e, d + h)})
+    new_minimum_values <- within(new_minimum_values, {f <- max(f, m + n)})
+    new_minimum_values <- within(new_minimum_values, {g <- max(g, f + n, h + i)})
+    new_minimum_values <- within(new_minimum_values, {j <- max(j, i + p)})
+    new_minimum_values <- within(new_minimum_values, {k <- max(k, s + l, m + q, p + n)})
+    new_minimum_values <- within(new_minimum_values, {l <- max(l, m + q, n + o + q)})
+    new_minimum_values <- within(new_minimum_values, {m <- max(m, n + o)})
+    new_minimum_values <- within(new_minimum_values, {q <- max(q, m + o)})
+    new_minimum_values <- within(new_minimum_values, {r <- max(r, p + j, j + i)})
+    new_minimum_values <- within(new_minimum_values, {u <- max(u, s + k)})
+  }
+  
+  for(i in 1:10) {
+    new_maximum_values <- within(new_maximum_values, a <- new_maximum_values[["b"]] + new_maximum_values[["f"]])
+    new_maximum_values <- within(new_maximum_values, r <- new_maximum_values[["p"]] + new_maximum_values[["j"]])
+    
+    new_maximum_values <- within(new_maximum_values, b <- new_maximum_values[["a"]] - new_minimum_values[["f"]])
+    new_maximum_values <- within(new_maximum_values, c <- new_maximum_values[["b"]] - new_minimum_values[["d"]])
+    new_maximum_values <- within(new_maximum_values, d <- new_maximum_values[["b"]] - new_minimum_values[["c"]])
+    new_maximum_values <- within(new_maximum_values, e <- new_maximum_values[["c"]] - new_minimum_values[["d"]])
+    new_maximum_values <- within(new_maximum_values, f <- new_maximum_values[["a"]] - new_minimum_values[["b"]])
+    new_maximum_values <- within(new_maximum_values, h <- new_maximum_values[["g"]] - new_minimum_values[["i"]])
+    new_maximum_values <- within(new_maximum_values, i <- new_maximum_values[["g"]] - new_minimum_values[["h"]])
+    new_maximum_values <- within(new_maximum_values, j <- new_maximum_values[["r"]] - new_minimum_values[["p"]])
+    new_maximum_values <- within(new_maximum_values, l <- new_maximum_values[["k"]] - new_minimum_values[["s"]])
+    new_maximum_values <- within(new_maximum_values, m <- min(
+      new_maximum_values[["q"]] - new_minimum_values[["o"]], 
+	  new_maximum_values[["l"]] - new_minimum_values[["q"]]))
+    new_maximum_values <- within(new_maximum_values, n <- new_maximum_values[["m"]] - new_minimum_values[["o"]])
+    new_maximum_values <- within(new_maximum_values, p <- new_maximum_values[["r"]] - new_minimum_values[["j"]])
+    new_maximum_values <- within(new_maximum_values, s <- new_maximum_values[["t"]] - new_minimum_values[["u"]])
+    new_maximum_values <- within(new_maximum_values, u <- new_maximum_values[["t"]] - new_minimum_values[["s"]])
+	new_maximum_values <- pmin(new_maximum_values, maximum_values)
+  }
+  
+   browser()
+  values <- lapply(the_letters, FUN = function(the_letter) values[[the_letter]][values[[the_letter]] >= new_minimum_values[[the_letter]]])
+  values <- lapply(the_letters, FUN = function(the_letter) values[[the_letter]][values[[the_letter]] <= new_maximum_values[[the_letter]]])
+    
   return(values)
 }
 
@@ -392,8 +441,10 @@ test_all_possible_values <- list(a = 1, b = 1:2, c = 1:2)
 # a <- working_combination(test_all_possible_values)
 library(compiler)
 enableJIT(3)
-
+number_of_calls <- 0
 working_combination <- function(test_all_possible_values) {
+  number_of_calls <<- number_of_calls + 1
+  message(number_of_calls)
   next_possible_values <- reduce_possibilities(test_all_possible_values)
   #non_length_1 <- unlist(lapply(test_all_possible_values, FUN = function(x) length(x) > 1))
   possibility_lengths <- unlist(lapply(next_possible_values, length))
@@ -403,7 +454,8 @@ working_combination <- function(test_all_possible_values) {
   if(sum(non_length_1) > 1) {
     of_max_length <- possibility_lengths == max(possibility_lengths)
     first_non_length_1 <- names(of_max_length[of_max_length][1])
-    next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][1]
+    browser()
+	next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][1]
 	  if(isTRUE(working_combination(next_possible_values))) {
 	    #print(next_possible_values)
 		return(next_possible_values)
@@ -455,3 +507,11 @@ working_single_combinations <- function(values) {
     {length(unique(unlist(values))) == length(unlist(values))}&&{
 	conforms_to_max_sums(next_possible_values)})
 }
+
+all_possible_values[["b"]]
+all_possible_values[["f"]]
+# since a = b + f, a must be at least(min(a) + min(f))
+
+
+
+
