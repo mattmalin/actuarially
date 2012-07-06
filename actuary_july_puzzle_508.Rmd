@@ -115,30 +115,277 @@ attr(a, "larger_elements") <- c()
 letter_properties <- lapply(letters[1:21], FUN = function(x) list(smaller_elements = c()))
 names(letter_properties) <- letters[1:21]
 
-letter_properties[["a"]][["smaller_elements"]] <- letters[1:21]
-letter_properties[["b"]][["smaller_elements"]] <- c("c", "d", "e", "h", "f", "g", "i")
-letter_properties[["c"]][["smaller_elements"]] <- c("d", "e", "h", "i", "j")
-letter_properties[["d"]][["smaller_elements"]] <- c("i")
-letter_properties[["e"]][["smaller_elements"]] <- c("d", "h")
+letter_properties[["a"]][["smaller_elements"]] <- letters[2:21]
+letter_properties[["r"]][["smaller_elements"]] <- c(letters[2:17], letters[19:21])
+letter_properties[["t"]][["smaller_elements"]] <- c(letters[2:17], "s", "u")
+letter_properties[["b"]][["smaller_elements"]] <- c(letters[3:17], "s", "u")
+letter_properties[["u"]][["smaller_elements"]] <- c(letters[3:17], "s")
+letter_properties[["c"]][["smaller_elements"]] <- c("d", "e", "h", "i", "j", "l")
+letter_properties[["d"]][["smaller_elements"]] <- c("i", "o")
+letter_properties[["e"]][["smaller_elements"]] <- c("d", "h", "f", "g", "p")
 letter_properties[["f"]][["smaller_elements"]] <- c("m", "n", "h")
-letter_properties[["g"]][["smaller_elements"]] <- c("f", "h", "i", "n")
-letter_properties[["h"]][["smaller_elements"]] <- c("d", "i")
-letter_properties[["i"]][["smaller_elements"]] <- c("n")
+letter_properties[["g"]][["smaller_elements"]] <- c("f", "h", "i", "n", "q")
+letter_properties[["h"]][["smaller_elements"]] <- c("d", "i", "n", "o", "s", "m")
+letter_properties[["i"]][["smaller_elements"]] <- c("n", "s")
 letter_properties[["j"]][["smaller_elements"]] <- c("i", "p", "e")
-letter_properties[["k"]][["smaller_elements"]] <- c("l", "s", "q", "m", "n", "o", "p")
-letter_properties[["l"]][["smaller_elements"]] <- c("s", "m", "n", "o", "p", "q")
-letter_properties[["m"]][["smaller_elements"]] <- c("n", "o")
+letter_properties[["k"]][["smaller_elements"]] <- c("l", "s", "q", "m", "n", "o", "p", "c")
+letter_properties[["l"]][["smaller_elements"]] <- c("s", "m", "n", "o", "p", "q", "e", "j")
+letter_properties[["m"]][["smaller_elements"]] <- c("n", "o", "d", "s")
 letter_properties[["n"]][["smaller_elements"]] <- c()
-letter_properties[["o"]][["smaller_elements"]] <- c("n")
-letter_properties[["p"]][["smaller_elements"]] <- c("o", "i")
-letter_properties[["q"]][["smaller_elements"]] <- c("m", "n", "o")
-letter_properties[["r"]][["smaller_elements"]] <- c("p", "j", "i", "h", "e", "d", "c", "t", "u", "v", "s")
-letter_properties[["s"]][["smaller_elements"]] <- c()
-letter_properties[["t"]][["smaller_elements"]] <- c("s", "u", "q", "m", "o", "n", "f")
-letter_properties[["u"]][["smaller_elements"]] <- c("k", "s")
+letter_properties[["o"]][["smaller_elements"]] <- c("i", "s", "n")
+letter_properties[["p"]][["smaller_elements"]] <- c("m", "n", "o", "q", "h", "d", "f", "s", "i", "g")
+letter_properties[["q"]][["smaller_elements"]] <- c("m", "n", "o", "h", "f")
+letter_properties[["s"]][["smaller_elements"]] <- c("n")
+
+smallers <- function(letter) {
+  return(letter_properties[[letter]]$smaller_elements)
+}
+
+example_letter <- "b"
+first_smaller_letters <- letter_properties[[example_letter]]$smaller_elements
+new_smaller_letters <- sort(unique(c(first_smaller_letters, unlist(lapply(first_smaller_letters, smallers)))))
+newer_smaller_letters <- sort(unique(c(new_smaller_letters, unlist(lapply(first_smaller_letters, smallers)))))
+
+smaller_letters <- letter_properties[[example_letter]]$smaller_elements
+
+full_smaller_letters <- function(letter) {
+  new_smallers <- sort(smallers(letter))
+  newer_smallers <- "12345678"
+  
+  while(!identical(new_smallers, newer_smallers)) {
+    new_smallers <- sort(unique(c(new_smallers, unlist(lapply(new_smallers, smallers)))))
+    newer_smallers <- sort(unique(c(new_smallers, unlist(lapply(new_smallers, smallers)))))
+  }
+  
+  return(newer_smallers)
+}
+ 
+full_smaller_letters("a")
+
+all_letters <- letters[1:21]
+names(all_letters) <- all_letters
+
+lapply(all_letters, FUN = function(letter) {
+  letter_properties[[letter]][["smaller_elements"]] <<- full_smaller_letters(letter)
+  })
+
+letter_properties[order(unlist(lapply(letter_properties, FUN = function(x) length(x$smaller_elements))))]
+length(unique(sapply(letter_properties, FUN = function(letter) length(letter$smaller_elements))))
 
 
 
 
+largers <- function(letter) {
+  names(letter_properties)[unlist(lapply(letter_properties, FUN = function(letter_prop) letter %in% letter_prop[["smaller_elements"]]))]
+}
+largers("a")
+largers("r")
+largers("s")
+smallers("a")
 
-# will then recursively go through: if a has b in smaller_element and b has c in smaller_elements then a gets c in smaller_elements too
+  
+# pick a starting value:
+max_value <- 100
+all_possible_values <- lapply(all_letters, FUN = function(x) 1:max_value)
+#names(all_possible_values) <- all_letters
+
+reduced_possible_values <- function(letter, possible_values = all_possible_values) {
+  letter_possibles <- possible_values[[letter]]
+  letter_smallers <- smallers(letter)
+  letter_largers <- largers(letter)
+
+  smallest_larger <- min(unlist(lapply(letter_largers, FUN = function(x) max(possible_values[[x]]))))
+  largest_smaller <- max(unlist(lapply(letter_smallers, FUN = function(x) min(possible_values[[x]]))))
+  
+  letter_possibles <- letter_possibles[letter_possibles < smallest_larger]
+  letter_possibles <- letter_possibles[letter_possibles > largest_smaller]
+  return(letter_possibles)
+}
+
+all_possible_values[["n"]]
+reduced_possible_values("n")
+reduced_possible_values("r")
+
+for(i in 1:100) all_possible_values <- lapply(all_letters, reduced_possible_values)
+
+all_possible_values[["a"]]
+
+potential_possible_values <- all_possible_values
+
+i <- 2
+potential_possible_values[["a"]] <- potential_possible_values[["a"]][i]
+
+for(i in 1:100) potential_possible_values <- lapply(all_letters, reduced_possible_values, potential_possible_values)
+
+#set value for a:
+
+#set value for b:
+#set value for c:
+#set value for d:
+#set value for e:
+#set value for f:
+#set value for g:
+#set value for h:
+#set value for i:
+#set value for j:
+#set value for k:
+#set value for l:
+#set value for m:
+#set value for n:
+#set value for o:
+#set value for p:
+#set value for q:
+#set value for r:
+#set value for s:
+#set value for t:
+#set value for u (given all others)
+value_possible(u = 10, other_possible_values = c(a = 10, b = 12))
+
+value_possible <- function(..., other_possible_values = c()) {
+  
+}
+
+all_possible_values 
+
+working_combinations <- list()
+possible_values <- all_possible_values
+ 
+
+letters_possible <- function(possible_values) {
+  # needs to be recursive:
+  next_possible_values <- possible_values
+  non_length_1 <- unlist(lapply(possible_values, FUN = function(x) length(x) > 1))
+  if(sum(non_length_1) != 0) {
+    first_non_length_1 <- names(non_length_1[non_length_1][1])
+    
+    next_possible_values[first_non_length_1] <- next_possible_values[[first_non_length_1]][1]
+	return(letters_possible(next_possible_values))
+  } else {
+    for(i in 1:50) next_possible_values <- lapply(all_letters, reduced_possible_values, next_possible_values)
+	if(any(lapply(next_possible_values, length) == 0)) return(FALSE)
+    browser()
+	if(!conforms_to_max_sums(next_possible_values)) {
+	  remove_possibility(next_possible_values, "all_possible_values") 
+	  return(FALSE)}
+	return(TRUE)
+  }
+}
+
+
+conforms_to_max_sums <- function(number_set) {
+  number_set <- unlist(number_set)
+  sums <- unlist(lapply(size_of_square_element, FUN = function(max_set) sum(number_set[max_set])))
+  return(length(unique(sums)) == 1)
+}
+
+# should do:
+
+# pick the first value available for this letter
+# go to the next letter, try first available
+# go to next letter, if no first letter, then it failed.
+
+letters_possible(all_possible_values)
+
+number_set <- 1:21
+names(number_set) <- letters[1:21]
+
+
+sum(number_set[size_of_square_element[[1]]])
+sum(number_set[size_of_square_element[[2]]])
+
+
+is_possible("a", options_for_a)
+  > is_possible("b", options_for_b)
+  > is_possible("b", "first b")
+   > is_possible("c", first_c)
+     > FALSE
+   > is_possible("c",
+
+   
+is_possible(all_options)
+  > is_possible(a = first_a, all_other_options)
+    > is_possible(a = first_a, b = first_b, all_other_options)
+      > is_possible(a = first_a, b = first_b, c = first_c)
+	    > FALSE
+      > is_possible(a = first_a, b = first_b, c = next_c)
+	    > FALSE
+      > is_possible(a = first_a, b = first_b, c = next_c)
+	    > FALSE
+	> FALSE
+  > FALSE
+  
+
+	
+possible_values <- all_possible_values
+
+is_possible <- function(possible_values) {
+  # needs to be recursive:
+  
+  next_possible_values <- possible_values
+  
+  non_length_1 <- unlist(lapply(possible_values, FUN = function(x) length(x) > 1))
+  if(sum(non_length_1) != 0) {
+    first_non_length_1 <- names(non_length_1[non_length_1][1])
+    
+    next_possible_values[first_non_length_1] <- next_possible_values[[first_non_length_1]][1]
+	return(letters_possible(next_possible_values))
+  } else {
+    for(i in 1:50) next_possible_values <- lapply(all_letters, reduced_possible_values, next_possible_values)
+	if(any(lapply(next_possible_values, length) == 0)) return(FALSE)
+    browser()
+	if(!conforms_to_max_sums(next_possible_values)) {
+	  remove_possibility(next_possible_values, "all_possible_values") 
+	  return(FALSE)}
+	return(TRUE)
+  }
+}
+
+combination <- all_possible_values
+test_all_possible_values <- list(a = 1, b = 1:2, c = 1:2)
+
+
+working_combination <- function(test_all_possible_values) {
+  next_possible_values <- test_all_possible_values
+  non_length_1 <- unlist(lapply(test_all_possible_values, FUN = function(x) length(x) > 1))
+  if(sum(non_length_1) > 1) {
+    first_non_length_1 <- names(non_length_1[non_length_1][1])
+    next_possible_values[first_non_length_1] <- next_possible_values[[first_non_length_1]][1]
+	  if(working_combination(next_possible_values)) {
+	    print(next_possible_values)
+		return(next_possible_values)
+	  } else {
+		next_possible_values[first_non_length_1] <- test_all_possible_values[[first_non_length_1]][-1]
+		return(working_combination(next_possible_values))
+	  }
+  } else {
+    if(sum(non_length_1) == 1) {
+	  first_non_length_1 <- names(non_length_1[non_length_1][1])
+      single_next_possible_values <- next_possible_values
+      single_next_possible_values[first_non_length_1] <- single_next_possible_values[[first_non_length_1]][1]
+	
+	  #if(conforms_to_max_sums(single_next_possible_values)) {
+	  if(sum(unlist(single_next_possible_values)) == 5) {
+	    print(single_next_possible_values)
+	    return(single_next_possible_values)
+	    #return(TRUE)
+	  } else {
+	    next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][-1]
+		return(working_combination(next_possible_values))
+	  }
+    } else {
+      print(test_all_possible_values)
+      if(sum(unlist(test_all_possible_values)) == 5) {
+        return(test_all_possible_values)
+        #return(TRUE)
+      } else {
+        return(FALSE)
+      }
+  }}
+}
+a <- working_combination(test_all_possible_values)
+
+
+works <- function(combination) {
+  
+}
+
