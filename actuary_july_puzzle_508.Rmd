@@ -1,0 +1,25 @@
+# The Actuary July 2012 Puzzle 508 - Square numbers
+
+## Square
+Unfortunately the puzzle seems to not be downloadable to grab the actual puzzle.
+
+Initial thoughts lead to the following rules (many of them):
+
+size_of_square == a + b + c
+size_of_square == a + b + d + e
+a+b+d+e
+a+f+g+h+e
+a+f+g+i+j
+k+l+m+n+g+h+e
+k+l+m+n+g+i+j
+k+l+q+p+j
+k+l+m+o+p+j
+k+l+q+p+j
+
+
+Many simultaneous equations:
+
+
+```{r}
+
+```
