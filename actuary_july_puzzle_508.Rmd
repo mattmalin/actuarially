@@ -5,16 +5,87 @@ Unfortunately the puzzle seems to not be downloadable to grab the actual puzzle.
 
 Initial thoughts lead to the following rules (many of them):
 
-size_of_square == a + b + c
-size_of_square == a + b + d + e
-a+b+d+e
-a+f+g+h+e
-a+f+g+i+j
-k+l+m+n+g+h+e
-k+l+m+n+g+i+j
-k+l+q+p+j
-k+l+m+o+p+j
-k+l+q+p+j
+size_of_square_element <- list(
+ c("a", "b", "c"),
+ c("a", "b", "d", "e"),
+ c("a", "b", "d", "e"), 
+ c("a", "f", "g", "h", "e"), 
+ c("a", "f", "g", "i", "j"), 
+ c("k", "l", "m", "n", "g", "h", "e"), 
+ c("k", "l", "m", "n", "g", "i", "j"), 
+ c("k", "l", "q", "p", "j"), 
+ c("k", "l", "m", "o", "p", "j"), 
+ c("k", "l", "q", "p", "j"), 
+ c("k", "l", "q", "r"), 
+ c("k", "s", "t", "r"), 
+ c("u", "t", "r"), 
+ c("a", "k", "u"), 
+ c("a", "l", "s", "u"), 
+ c("a", "l", "t"), 
+ c("b", "f", "m", "q", "t"), 
+ c("b", "f", "n", "o", "q", "t"), 
+ c("b", "f", "n", "p", "r"), 
+ c("b", "g", "o", "q", "t"), 
+ c("b", "g", "p", "r"), 
+ c("b", "h", "i", "p", "r"), 
+ c("b", "h", "j", "r"), 
+ c("b", "h", "i", "o", "q", "t"), 
+ c("c", "d", "h", "i", "o", "q", "t"), 
+ c("c", "d", "h", "i", "p", "r"), 
+ c("c", "d", "h", "j", "r"), 
+ c("c", "e", "i", "o", "q", "t"), 
+ c("c", "e", "i", "p", "r"), 
+ c("c", "e", "j", "r")
+)
+
+# getting other relations:
+
+first  <- c("a", "b", "c")
+second <- c("a", "b", "d", "e")
+
+# can derive from this that a = size_of_square_element - (b + c)
+
+first_value_of_a = first[first != "a"]
+list(
+  a = list(
+    first[first != "a"])
+	
+formulas_list <- lapply(size_of_square_element, FUN = function(square_total_element) {
+  formula_vector = c(rep(1, length(square_total_element)), -1)
+  names(formula_vector) <- c(square_total_element, "max_size")
+  return(formula_vector)
+})
+
+formulas <- as.data.frame(lapply(1:22, FUN = function(x) character(0)))
+names(formulas) <- c(letters[1:21], "max_size")
+
+zero_formula <- rep(0, 22)
+names(zero_formula) <-  names(formulas)
+
+full_formulas_list <- lapply(formulas_list, FUN = function(the_formula) {
+  a <- zero_formula
+  a[names(the_formula)] <- the_formula
+  return(a)
+})
+
+formulas <- data.frame(do.call("rbind", full_formulas_list))
+
+custom_formula <- zero_formula
+custom_formula["max_size"] 
+formulas <- rbind(formulas, 
+
+fmatrix <- formulas[as.character(letters[1:21])]
+solve(fmatrix[2:22, 1:21], rep(10, 21))
+
+dim(formulas)
+solve(formulas[:22, 1:22])
+colSums(formulas)
+rowSums(formulas)
+
+#sum(all^2) = size_of_square^2
+
+
+
 
 
 Many simultaneous equations:
@@ -23,3 +94,51 @@ Many simultaneous equations:
 ```{r}
 
 ```
+
+## starting again with new logic:
+
+# first pick a value for A
+a <- 50
+
+# now reduce all options others can be:
+
+# b is smaller than b and larger than at least 
+
+
+# definite order of size:
+
+attr(a_properties, "larger_elements") <- c()
+attr(a, "larger_elements") <- c()
+
+
+
+letter_properties <- lapply(letters[1:21], FUN = function(x) list(smaller_elements = c()))
+names(letter_properties) <- letters[1:21]
+
+letter_properties[["a"]][["smaller_elements"]] <- letters[1:21]
+letter_properties[["b"]][["smaller_elements"]] <- c("c", "d", "e", "h", "f", "g", "i")
+letter_properties[["c"]][["smaller_elements"]] <- c("d", "e", "h", "i", "j")
+letter_properties[["d"]][["smaller_elements"]] <- c("i")
+letter_properties[["e"]][["smaller_elements"]] <- c("d", "h")
+letter_properties[["f"]][["smaller_elements"]] <- c("m", "n", "h")
+letter_properties[["g"]][["smaller_elements"]] <- c("f", "h", "i", "n")
+letter_properties[["h"]][["smaller_elements"]] <- c("d", "i")
+letter_properties[["i"]][["smaller_elements"]] <- c("n")
+letter_properties[["j"]][["smaller_elements"]] <- c("i", "p", "e")
+letter_properties[["k"]][["smaller_elements"]] <- c("l", "s", "q", "m", "n", "o", "p")
+letter_properties[["l"]][["smaller_elements"]] <- c("s", "m", "n", "o", "p", "q")
+letter_properties[["m"]][["smaller_elements"]] <- c("n", "o")
+letter_properties[["n"]][["smaller_elements"]] <- c()
+letter_properties[["o"]][["smaller_elements"]] <- c("n")
+letter_properties[["p"]][["smaller_elements"]] <- c("o", "i")
+letter_properties[["q"]][["smaller_elements"]] <- c("m", "n", "o")
+letter_properties[["r"]][["smaller_elements"]] <- c("p", "j", "i", "h", "e", "d", "c", "t", "u", "v", "s")
+letter_properties[["s"]][["smaller_elements"]] <- c()
+letter_properties[["t"]][["smaller_elements"]] <- c("s", "u", "q", "m", "o", "n", "f")
+letter_properties[["u"]][["smaller_elements"]] <- c("k", "s")
+
+
+
+
+
+# will then recursively go through: if a has b in smaller_element and b has c in smaller_elements then a gets c in smaller_elements too
