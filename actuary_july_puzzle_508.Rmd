@@ -394,14 +394,15 @@ library(compiler)
 enableJIT(3)
 
 working_combination <- function(test_all_possible_values) {
-  print(unlist(test_all_possible_values))
-  next_possible_values <- test_all_possible_values
-  next_possible_values <- reduce_possibilities(next_possible_values)
+  next_possible_values <- reduce_possibilities(test_all_possible_values)
   #non_length_1 <- unlist(lapply(test_all_possible_values, FUN = function(x) length(x) > 1))
-  non_length_1 <- unlist(lapply(test_all_possible_values, length)) > 1
-  message("\n\n", non_length_1, "\n")
+  possibility_lengths <- unlist(lapply(next_possible_values, length))
+  if(any(possibility_lengths) == 0) return(FALSE)
+  non_length_1 <- possibility_lengths > 1
+  #message("\n\n", non_length_1, "\n")
   if(sum(non_length_1) > 1) {
-    first_non_length_1 <- names(non_length_1[non_length_1][1])
+    of_max_length <- possibility_lengths == max(possibility_lengths)
+    first_non_length_1 <- names(of_max_length[of_max_length][1])
     next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][1]
 	  if(isTRUE(working_combination(next_possible_values))) {
 	    #print(next_possible_values)
@@ -423,12 +424,12 @@ working_combination <- function(test_all_possible_values) {
 	    #return(TRUE)
 	  } else {
 	    next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][-1]
-		return(next_possible_values)
+		return(working_combination(next_possible_values))
 	  }
     } else {
-      #print(test_all_possible_values)
+      print(unlist(next_possible_values))
       if(isTRUE(working_single_combinations(next_possible_values))) {
-        return(test_all_possible_values)
+        return(next_possible_values)
         #return(TRUE)
       } else {
         return(FALSE)
@@ -437,8 +438,10 @@ working_combination <- function(test_all_possible_values) {
 }
 tst_all_possible_values <- all_possible_values
 tst_all_possible_values[["a"]] <- 50
+tst_all_possible_values[["b"]] <- 35
+tst_all_possible_values <- reduce_possibilities(tst_all_possible_values)
 
-a <- working_combination(all_possible_values)
+#a <- working_combination(all_possible_values)
 a <- working_combination(tst_all_possible_values)
 
 
