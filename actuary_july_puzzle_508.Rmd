@@ -185,7 +185,7 @@ smallers("a")
 
   
 # pick a starting value:
-max_value <- 100
+max_value <- 50
 all_possible_values <- lapply(all_letters, FUN = function(x) 1:max_value)
 #names(all_possible_values) <- all_letters
 
@@ -207,6 +207,13 @@ reduced_possible_values("n")
 reduced_possible_values("r")
 
 for(i in 1:100) all_possible_values <- lapply(all_letters, reduced_possible_values)
+
+reduce_possibilities <- function(values, the_letters = all_letters, times = 21) {
+  for(i in 1:times) values <- lapply(the_letters, reduced_possible_values, values)
+  return(values)
+}
+
+all_possible_values <- reduce_possibilities(all_possible_values)
 
 all_possible_values[["a"]]
 
@@ -344,37 +351,83 @@ combination <- all_possible_values
 test_all_possible_values <- list(a = 1, b = 1:2, c = 1:2)
 
 
+# working_combination <- function(test_all_possible_values) {
+#   next_possible_values <- test_all_possible_values
+#   non_length_1 <- unlist(lapply(test_all_possible_values, FUN = function(x) length(x) > 1))
+#   if(sum(non_length_1) > 1) {
+#     first_non_length_1 <- names(non_length_1[non_length_1][1])
+#     next_possible_values[first_non_length_1] <- next_possible_values[[first_non_length_1]][1]
+# 	  if(working_combination(next_possible_values)) {
+# 	    print(next_possible_values)
+# 		return(next_possible_values)
+# 	  } else {
+# 		next_possible_values[first_non_length_1] <- test_all_possible_values[[first_non_length_1]][-1]
+# 		return(working_combination(next_possible_values))
+# 	  }
+#   } else {
+#     if(sum(non_length_1) == 1) {
+# 	  first_non_length_1 <- names(non_length_1[non_length_1][1])
+#       single_next_possible_values <- next_possible_values
+#       single_next_possible_values[first_non_length_1] <- single_next_possible_values[[first_non_length_1]][1]
+# 	
+# 	  #if(conforms_to_max_sums(single_next_possible_values)) {
+# 	  if(sum(unlist(single_next_possible_values)) == 5) {
+# 	    print(single_next_possible_values)
+# 	    return(single_next_possible_values)
+# 	    #return(TRUE)
+# 	  } else {
+# 	    next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][-1]
+# 		return(working_combination(next_possible_values))
+# 	  }
+#     } else {
+#       print(test_all_possible_values)
+#       if(sum(unlist(test_all_possible_values)) == 5) {
+#         return(test_all_possible_values)
+#         #return(TRUE)
+#       } else {
+#         return(FALSE)
+#       }
+#   }}
+# }
+# a <- working_combination(test_all_possible_values)
+library(compiler)
+enableJIT(3)
+
 working_combination <- function(test_all_possible_values) {
+  print(unlist(test_all_possible_values))
   next_possible_values <- test_all_possible_values
-  non_length_1 <- unlist(lapply(test_all_possible_values, FUN = function(x) length(x) > 1))
+  next_possible_values <- reduce_possibilities(next_possible_values)
+  #non_length_1 <- unlist(lapply(test_all_possible_values, FUN = function(x) length(x) > 1))
+  non_length_1 <- unlist(lapply(test_all_possible_values, length)) > 1
+  message("\n\n", non_length_1, "\n")
   if(sum(non_length_1) > 1) {
     first_non_length_1 <- names(non_length_1[non_length_1][1])
-    next_possible_values[first_non_length_1] <- next_possible_values[[first_non_length_1]][1]
-	  if(working_combination(next_possible_values)) {
-	    print(next_possible_values)
+    next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][1]
+	  if(isTRUE(working_combination(next_possible_values))) {
+	    #print(next_possible_values)
 		return(next_possible_values)
 	  } else {
-		next_possible_values[first_non_length_1] <- test_all_possible_values[[first_non_length_1]][-1]
+		next_possible_values[[first_non_length_1]] <- test_all_possible_values[[first_non_length_1]][-1]
 		return(working_combination(next_possible_values))
 	  }
   } else {
     if(sum(non_length_1) == 1) {
 	  first_non_length_1 <- names(non_length_1[non_length_1][1])
       single_next_possible_values <- next_possible_values
-      single_next_possible_values[first_non_length_1] <- single_next_possible_values[[first_non_length_1]][1]
+      single_next_possible_values[[first_non_length_1]] <- single_next_possible_values[[first_non_length_1]][1]
 	
 	  #if(conforms_to_max_sums(single_next_possible_values)) {
-	  if(sum(unlist(single_next_possible_values)) == 5) {
-	    print(single_next_possible_values)
+	  if(isTRUE(working_single_combinations(single_next_possible_values))) {
+	    #print(single_next_possible_values)
 	    return(single_next_possible_values)
 	    #return(TRUE)
 	  } else {
 	    next_possible_values[[first_non_length_1]] <- next_possible_values[[first_non_length_1]][-1]
-		return(working_combination(next_possible_values))
+		return(next_possible_values)
 	  }
     } else {
-      print(test_all_possible_values)
-      if(sum(unlist(test_all_possible_values)) == 5) {
+      #print(test_all_possible_values)
+      if(isTRUE(working_single_combinations(next_possible_values))) {
         return(test_all_possible_values)
         #return(TRUE)
       } else {
@@ -382,10 +435,20 @@ working_combination <- function(test_all_possible_values) {
       }
   }}
 }
-a <- working_combination(test_all_possible_values)
+tst_all_possible_values <- all_possible_values
+tst_all_possible_values[["a"]] <- 50
+
+a <- working_combination(all_possible_values)
+a <- working_combination(tst_all_possible_values)
 
 
-works <- function(combination) {
-  
+system.time(replicate(10000, lapply(all_possible_values, length)))
+system.time(replicate(10000, unlist(lapply(all_possible_values, length)) > 1))
+system.time(replicate(10000, lapply(all_possible_values, length)))
+
+
+working_single_combinations <- function(values) {
+  return(
+    {length(unique(unlist(values))) == length(unlist(values))}&&{
+	conforms_to_max_sums(next_possible_values)})
 }
-
