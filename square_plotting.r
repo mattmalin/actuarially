@@ -1,5 +1,5 @@
 library(ggplot2)
-values <- as.list(looped_possible[[1]])
+values <- as.list(possible_solutions[[1]])
  
 square_positions <- list()
 
@@ -166,3 +166,5 @@ ggplot(square_positions_df) +
   geom_rect(aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = factor(square, levels = sample(levels(square)))), colour = "black") +
   geom_text(aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = square)) +
   opts(legend.position = "none", title = "21 squares")
+
+####

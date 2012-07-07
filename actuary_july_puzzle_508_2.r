@@ -61,7 +61,7 @@ max_oo <- 100
 possible_nn <- 2 * 1:{max_nn / 2}
 
 # Instead of stopping the loop, will save the combinations in a list outside the loop: 
-looped_possible <- list()
+possible_solutions <- list()
 i <- 1
 
 # Now cycle through the possible values for n
@@ -94,29 +94,27 @@ for(nn in possible_nn) {
 	  bb <- cc + dd
 	  aa <- bb + ff
 	  
-      allls <- c(
-	    a = aa, b = bb, c = cc, d = dd, e = ee, 
-	    f = ff, g = gg, h = hh, i = ii, j = jj, 
-        k = kk, l = ll, m = mm, n = nn, o = oo, 
-        p = pp, q = qq, r = rr, s = ss, t = tt, 
-	    u = uu)
+      all_values <- c(
+	    a = aa, b = bb, c = cc, d = dd, e = ee, f = ff, g = gg, h = hh, i = ii,
+		j = jj, k = kk, l = ll, m = mm, n = nn, o = oo, p = pp, q = qq, r = rr,
+		s = ss, t = tt, u = uu)
 	    
-	  if(any(duplicated(allls))) next
+	  if(any(duplicated(all_values))) next
 	  if(aa + bb + cc != uu + tt + rr) next
 	  if(bb + cc != kk + uu) next
 	  if(bb + tt != kk + ee + jj) next
 
-	  if({aa + bb + cc}^2 != sum(allls^2)) next
+	  if({aa + bb + cc}^2 != sum(all_values^2)) next
 	  
 	  # if it's reached here, suits all of defined criteria (so possibly a solution)
-	  looped_possible[[i]] <- allls
+	  possible_solutions[[i]] <- all_values
 	    
-	  print(looped_possible[[i]])
+	  print(possible_solutions[[i]])
 	  i <- i + 1
 	}
   }
 }
 
-print(looped_possible)
-saveRDS(looped_possible, "c:/matt/temp/looped_possible.rds")
-looped_possible <- readRDS("c:/matt/temp/looped_possible.rds")
+print(possible_solutions)
+saveRDS(possible_solutions, "c:/matt/temp/possible_solutions.rds")
+possible_solutions <- readRDS("c:/matt/temp/possible_solutions.rds")
