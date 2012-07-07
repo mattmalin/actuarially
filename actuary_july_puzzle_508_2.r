@@ -25,73 +25,98 @@
 #   * t + s = l + q => (u + s) + s = l + q => u + 2s = l + q => (k + s) + 2s = l + q
 #     => k + 3s = l + q => (l + s) + 3s = l + q => l + 4s = l + q => 4s = q)
 # * k = l + s
-# * 
+# * u = k + s
+# * t = u + s
+# * o < p < l - n
+# * r = l + t - n -p
+# * j = r - p
+# * i = j - p
+# * g = q + p - i - n - m
+# * f = g - n
+# * h = g - i
+# * e = i + j - h
+# * d = e - h
+# * c = d + e
+# * b = c + d
+# * a = b + f
+#
+# Then do a few checks that the total length of each side is consistent:
+#
+# * a + b + c = u + t + r
+# * b + c = k + u
+# * b + t = k + e + j
+#
+# Also, the total area of the small squares should sum the total area:
+# * (a + b + c)^2 = a^2 + b^2 + c^2 + d^2 + e^2 + f^2 + g^2 + h^2 + i^2 + j^2 +
+#                   k^2 + l^2 + m^2 + n^2 + o^2 + p^2 + q^2 + r^2 + s^2 + t^2 + u^2
 
+
+#
 # First decide on maximum values to take across our loops 
 # Using loops here, despite inefficiency, for ease of understanding):
-max_n_value <- 50
-max_o_value <- 100
+max_nn <- 20
+max_oo <- 100
 
 # Now set up the set of possible values for our first guess (in this case, square n)
-possible_n <- 1:max_n_value
+possible_nn <- 2 * 1:{max_nn / 2}
 
 # Instead of stopping the loop, will save the combinations in a list outside the loop: 
 looped_possible <- list()
 i <- 1
 
 # Now cycle through the possible values for n
-for(n_value in possible_n) {
-  possible_o <- {n_value + 1}:max_o_value  # includes that o > n)
-  for(o_value in possible_o) {
-    m_value <- n_value + o_value
-	q_value <- m_value + o_value
-	l_value <- m_value + q_value
-	if(any(duplicated(c(n_value, o_value, m_value, q_value, l_value)))) next
-	s_value <- 
-	possible_s <- 1:{l_value - 1} # includes that s < l
-	possible_s <- possible_s[!{possible_s %in% c(n_value, o_value, m_value, q_value, l_value)}] # uniques
-	if(length(possible_s) == 0) next
-	for(s_value in possible_s) {
-	  k_value <- l_value + s_value
-	  u_value <- k_value + s_value
-	  t_value <- u_value + s_value
-      if(any(duplicated(c(n_value, o_value, m_value, q_value, l_value, s_value, k_value, u_value, t_value)))) next
-	  possible_p <- {o_value + 1}:{l_value - n_value - 1} # as o < p < l - n
-	  possible_p <- possible_p[!{possible_p %in% c(n_value, o_value, m_value, q_value, l_value, s_value, k_value, u_value, t_value)}] # uniques
-	  if(length(possible_p) == 0) next
-	  for(p_value in possible_p) {
-	    r_value <- l_value + t_value - n_value - p_value
-		j_value <- r_value - p_value
-		i_value <- j_value - p_value
-		g_value <- q_value + p_value - i_value - n_value - m_value
-		f_value <- g_value - n_value
-		h_value <- g_value - i_value
-		e_value <- i_value + j_value - h_value
-		d_value <- e_value - h_value
-		c_value <- d_value + e_value
-		b_value <- c_value + d_value
-		a_value <- b_value + f_value
-		
-        all_values <- c(
-		  a = a_value, b = b_value, c = c_value, d = d_value, e = e_value, 
-		  f = f_value, g = g_value, h = h_value, i = i_value, j = j_value, 
-          k = k_value, l = l_value, m = m_value, n = n_value, o = o_value, 
-          p = p_value, q = q_value, r = r_value, s = s_value, t = t_value, 
-		  u = u_value)
-		  
-		if(any(duplicated(all_values))) next
-		if(a_value + b_value + c_value != u_value + t_value + r_value) next
-		if(b_value + c_value != k_value + u_value) next
-		if(b_value + t_value != k_value + e_value + j_value) next
-		
-		looped_possible[[i]] <- all_values
-		  
-	    print(looped_possible[[i]])
-		i <- i + 1
-	  }
+for(nn in possible_nn) {
+  possible_oo <- {nn + 1}:max_oo  # includes that o > n)
+  for(oo in possible_oo) {
+    mm <- nn + oo
+	qq <- mm + oo
+	if({qq %% 4} != 0) next
+	ll <- mm + qq
+	if(any(duplicated(c(nn, oo, mm, qq, ll)))) next
+	ss <- qq / 4
+	kk <- ll + ss
+	uu <- kk + ss
+	tt <- uu + ss
+    if(any(duplicated(c(nn, oo, mm, qq, ll, ss, kk, uu, tt)))) next
+	possible_p <- {oo + 1}:{ll - nn - 1} 
+	possible_p <- possible_p[!{possible_p %in% c(nn, oo, mm, qq, ll, ss, kk, uu, tt)}] #uniques
+	if(length(possible_p) == 0) next
+	for(pp in possible_p) {
+	  rr <- ll + tt - nn - pp
+	  jj <- rr - pp
+	  ii <- jj - pp
+	  gg <- qq + pp - ii - nn - mm
+	  ff <- gg - nn
+	  hh <- gg - ii
+	  ee <- ii + jj - hh
+	  dd <- ee - hh
+	  cc <- dd + ee
+	  bb <- cc + dd
+	  aa <- bb + ff
+	  
+      allls <- c(
+	    a = aa, b = bb, c = cc, d = dd, e = ee, 
+	    f = ff, g = gg, h = hh, i = ii, j = jj, 
+        k = kk, l = ll, m = mm, n = nn, o = oo, 
+        p = pp, q = qq, r = rr, s = ss, t = tt, 
+	    u = uu)
+	    
+	  if(any(duplicated(allls))) next
+	  if(aa + bb + cc != uu + tt + rr) next
+	  if(bb + cc != kk + uu) next
+	  if(bb + tt != kk + ee + jj) next
+
+	  if({aa + bb + cc}^2 != sum(allls^2)) next
+	  
+	  # if it's reached here, suits all of defined criteria (so possibly a solution)
+	  looped_possible[[i]] <- allls
+	    
+	  print(looped_possible[[i]])
+	  i <- i + 1
 	}
   }
 }
 
 print(looped_possible)
 saveRDS(looped_possible, "c:/matt/temp/looped_possible.rds")
+looped_possible <- readRDS("c:/matt/temp/looped_possible.rds")
