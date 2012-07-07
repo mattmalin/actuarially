@@ -91,7 +91,7 @@ for(nn in possible_nn) {
 	possible_p <- (oo + 1):(ll - nn - 1)
 	possible_p <- possible_p[!{
 	  possible_p %in% c(nn, oo, mm, qq, ll, ss, kk, uu, tt)
-	}] # filter out values already used, as all numbers must be unique
+	}] # filter out values already used as numbers must be unique
 	if(length(possible_p) == 0) next
 	for(pp in possible_p) {
 	  rr <- ll + tt - nn - pp
@@ -107,9 +107,10 @@ for(nn in possible_nn) {
 	  aa <- bb + ff
 	  
       all_values <- c(
-	    a = aa, b = bb, c = cc, d = dd, e = ee, f = ff, g = gg, h = hh, i = ii,
-		j = jj, k = kk, l = ll, m = mm, n = nn, o = oo, p = pp, q = qq, r = rr,
-		s = ss, t = tt, u = uu)
+	    a = aa, b = bb, c = cc, d = dd, e = ee, 
+		f = ff, g = gg, h = hh, i = ii, j = jj, k = kk, 
+		l = ll, m = mm, n = nn, o = oo, p = pp, q = qq, 
+		r = rr,	s = ss, t = tt, u = uu)
 	    
 	  if(any(duplicated(all_values))) next
 	  if(aa + bb + cc != uu + tt + rr) next
@@ -136,39 +137,62 @@ As you can see, they are seem to be multiples of the first solution (when $a = 5
 
 ```{r plot_setup}
 library(ggplot2)
-values <- as.list(possible_solutions[[1]]) # use first solution in the list
+values <- as.list(possible_solutions[[1]]) # use first solution
 ```
 
 To set up the plot, need to manually create table of values of corner locations for each square. I used the image of the puzzle to create these points based on lengths of all squares in a given solution.
 
-```{r square_df, eval = TRUE}
+```{r square_df, eval = TRUE, tidy = FALSE}
 squares <- list()
 
 squares <- with(values, {
   sq <- list()
-  sq$u <- c(x1 = 0, y1 = 0, x2 = u, y2 = u)
-  sq$u <- c(x1 = 0, y1 = 0, x2 = u, y2 = u)
-  sq$t <- c(x1 = u, y1 = 0, x2 = u + t, y2 = t)
-  sq$r <- c(x1 = u + t,  y1 = 0, x2 = u + t + r,  y2 = r)
-  sq$k <- c(x1 = 0, y1 = u, x2 = k, y2 = u + k)
-  sq$s <- c(x1 = k, y1 = u, x2 = k + s, y2 = u + s)  
-  sq$l <- c(x1 = k, y1 = u + s, x2 = k + l, y2 = u + s + l)
-  sq$q <- c(x1 = k + l, y1 = t, x2 = k + l + q, y2 = t + q)
-  sq$m <- c(x1 = k + l, y1 = t + q, x2 = k + l + m, y2 = t + q + m)
-  sq$o <- c(x1 = k + l + m, y1 = t + q, x2 = k + l + m + o, y2 = t + q + o)
-  sq$n <- c(x1 = k + l + m, y1 = t + q + o, x2 = k + l + m + n, y2 = t + q + o + n)
-  sq$p <- c(x1 = k + l + q, y1 = r, x2 = k + l + q + p, y2 = r + p)
-  sq$j <- c(x1 = k + l + q + p, y1 = r, x2 = k + l + q + p + j, y2 = r + j)
-  sq$i <- c(x1 = a + f + g, y1 = r + p, x2 = a + f + g + i, y2 = r + i)
-  sq$a <- c(x1 = 0, y1 = k + u, x2 = a, y2 = k + u + a)
-  sq$b <- c(x1 = a, y1 = t + q + m + f, x2 = a + b, y2 = t + q + m + f + b)
-  sq$c <- c(x1 = a + b, y1 = r + j + e, x2 = a + b + c, y2 = r + j + e + c)
-  sq$d <- c(x1 = a + b, y1 = r + j + h, x2 = a + b + d, y2 = r + j + h + d)
-  sq$e <- c(x1 = a + b + d, y1 = r + j, x2 = a + b + d + e, y2 = r + j + e)
-  sq$f <- c(x1 = a, y1 = t + l, x2 = a + f, y2 = t + l + f)
-  sq$g <- c(x1 = a + f, y1 = t + q + o, x2 = a + f + g, y2 = t + q + o + g)
-  sq$h <- c(x1 = a + f + g, y1 = r + j, x2 = a + f + g + h, y2 = r + j + h)
-  sq$i <- c(x1 = a + f + g, y1 = r + p, x2 = a + f + g + i, y2 = r + p + i)
+  sq$u <- c(x1 = 0, y1 = 0, 
+            x2 = u, y2 = u)
+  sq$u <- c(x1 = 0, y1 = 0, 
+            x2 = u, y2 = u)
+  sq$t <- c(x1 = u, y1 = 0, 
+            x2 = u + t, y2 = t)
+  sq$r <- c(x1 = u + t,  y1 = 0, 
+            x2 = u + t + r,  y2 = r)
+  sq$k <- c(x1 = 0, y1 = u, 
+            x2 = k, y2 = u + k)
+  sq$s <- c(x1 = k, y1 = u, 
+            x2 = k + s, y2 = u + s)  
+  sq$l <- c(x1 = k, y1 = u + s, 
+            x2 = k + l, y2 = u + s + l)
+  sq$q <- c(x1 = k + l, y1 = t, 
+            x2 = k + l + q, y2 = t + q)
+  sq$m <- c(x1 = k + l, y1 = t + q, 
+            x2 = k + l + m, y2 = t + q + m)
+  sq$o <- c(x1 = k + l + m, y1 = t + q, 
+            x2 = k + l + m + o, y2 = t + q + o)
+  sq$n <- c(x1 = k + l + m, y1 = t + q + o, 
+            x2 = k + l + m + n, y2 = t + q + o + n)
+  sq$p <- c(x1 = k + l + q, y1 = r, 
+            x2 = k + l + q + p, y2 = r + p)
+  sq$j <- c(x1 = k + l + q + p, y1 = r,
+            x2 = k + l + q + p + j, y2 = r + j)
+  sq$i <- c(x1 = a + f + g, y1 = r + p, 
+            x2 = a + f + g + i, y2 = r + i)
+  sq$a <- c(x1 = 0, y1 = k + u, 
+            x2 = a, y2 = k + u + a)
+  sq$b <- c(x1 = a, y1 = t + q + m + f, 
+            x2 = a + b, y2 = t + q + m + f + b)
+  sq$c <- c(x1 = a + b, y1 = r + j + e, 
+            x2 = a + b + c, y2 = r + j + e + c)
+  sq$d <- c(x1 = a + b, y1 = r + j + h, 
+            x2 = a + b + d, y2 = r + j + h + d)
+  sq$e <- c(x1 = a + b + d, y1 = r + j, 
+            x2 = a + b + d + e, y2 = r + j + e)
+  sq$f <- c(x1 = a, y1 = t + l, 
+            x2 = a + f, y2 = t + l + f)
+  sq$g <- c(x1 = a + f, y1 = t + q + o, 
+            x2 = a + f + g, y2 = t + q + o + g)
+  sq$h <- c(x1 = a + f + g, y1 = r + j, 
+            x2 = a + f + g + h, y2 = r + j + h)
+  sq$i <- c(x1 = a + f + g, y1 = r + p, 
+            x2 = a + f + g + i, y2 = r + p + i)
   return(sq)
 })
 
