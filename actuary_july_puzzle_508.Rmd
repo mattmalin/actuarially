@@ -252,6 +252,9 @@ reduce_possibilities <- function(values, the_letters = all_letters, times = 5) {
     new_maximum_values <- within(new_maximum_values, u <- new_maximum_values[["t"]] - new_minimum_values[["s"]])
 	new_maximum_values <- as.list(pmin(unlist(new_maximum_values), unlist(maximum_values)))
 	
+   
+	new_maximum_values <- as.list(pmin(unlist(new_maximum_values), unlist(maximum_values)))
+	
 	values <- lapply(the_letters, FUN = function(the_letter) values[[the_letter]][values[[the_letter]] >= new_minimum_values[[the_letter]]])
     values <- lapply(the_letters, FUN = function(the_letter) values[[the_letter]][values[[the_letter]] <= new_maximum_values[[the_letter]]])
 
@@ -264,7 +267,32 @@ reduce_possibilities <- function(values, the_letters = all_letters, times = 5) {
 
 for(i in 1:10) all_possible_values <- reduce_possibilities(all_possible_values, times = 20)
 
+
 all_possible_values[["a"]]
+
+new_possible_values        <- all_possible_values
+new_possible_values[["a"]] <- new_possible_values[["a"]][1]
+for(i in 1:10) new_possible_values <- reduce_possibilities(new_possible_values, times = 20)
+all(lapply(new_possible_values, length) > 0)
+
+possible_value_for_letter <- function(letter, value, possible_values) {
+  if(value %in% possible_values[[letter]]) {
+    possible_values[[letter]] <- value
+    for(i in 1:10) possible_values <- reduce_possibilities(possible_values, times = 20)
+    return(all(lapply(possible_values, length) > 0)) 
+  } else {
+    return(FALSE)
+  }
+}
+
+possible_value_for_letter("a", 49, all_possible_values)
+possible_value_for_letter("s", 21, all_possible_values)
+
+new_possible_values        <- all_possible_values
+new_possible_values[["a"]] <- new_possible_values[["a"]][sapply(new_possible_values[["a"]], FUN = function(value) possible_value_for_letter("a", value, new_possible_values))]
+new_possible_values[["b"]] <- new_possible_values[["b"]][sapply(new_possible_values[["b"]], FUN = function(value) possible_value_for_letter("b", value, new_possible_values))]
+
+for(i in 1:5) new_possible_values <- lapply(all_letters, FUN = function(letter) new_possible_values[[letter]][sapply(new_possible_values[[letter]], FUN = function(value) possible_value_for_letter(letter, value, new_possible_values))])
 
 potential_possible_values <- all_possible_values
 
@@ -448,7 +476,7 @@ working_combination <- function(test_all_possible_values) {
   next_possible_values <- reduce_possibilities(test_all_possible_values)
   #non_length_1 <- unlist(lapply(test_all_possible_values, FUN = function(x) length(x) > 1))
   possibility_lengths <- unlist(lapply(next_possible_values, length))
-  if(any(possibility_lengths) == 0) return(FALSE)
+  if(any(possibility_lengths == 0)) return(FALSE)
   non_length_1 <- possibility_lengths > 1
   #message("\n\n", non_length_1, "\n")
   if(sum(non_length_1) > 1) {
@@ -489,10 +517,11 @@ working_combination <- function(test_all_possible_values) {
   }}
 }
 tst_all_possible_values <- all_possible_values
-tst_all_possible_values[["a"]] <- 50
-tst_all_possible_values[["b"]] <- 35
+tst_all_possible_values <- new_possible_values
+#tst_all_possible_values[["a"]] <- 50
+#tst_all_possible_values[["b"]] <- 35
 tst_all_possible_values <- reduce_possibilities(tst_all_possible_values)
-unlist(lapply(tst_all_possible_values, length))
+tst_all_possible_values <- tst_all_possible_values[order(unlist(lapply(tst_all_possible_values, length)))]
 
 # used <- unlist(tst_all_possible_values[lapply(tst_all_possible_values, length) == 1], use.names = FALSE)
 # tst_all_possible_values_a <- lapply(tst_all_possible_values, FUN = function(letter_values) letter_values[!{letter_values %in% used}])
@@ -518,8 +547,60 @@ all_possible_values[["f"]]
 # since a = b + f, a must be at least(min(a) + min(f))
 
 
+################################################################################
+# New approach: nested!
+################################################################################
 
+# start with all_possible_values
+possible_values <- all_possible_values
 
+while(!solved) {
+  # set n:
+  possible_values[["n"]] <- possible_values[["n"]][1]
+  n <- 
+}
+
+possible_n <- 1:100
+for(n_value in possible_n) {
+  possible_s <- {n_value + 1}:100
+  for(s_value in possible_s) {
+    possible_i <- {s_value + 1}:100
+    for(i_value in possible_i) {
+      possible_o <- {o_value + 1}:100
+      for(o_value in possible_o) {
+	    possible_d <- {o_value + 1):100
+		for(d_value in possible_d) {
+		  m_value <- n_value + o_value
+		  if(!{m_value > d_value}) next
+		  possible_h <- {m_value + 1}:100
+		  for(h_value in possible_h) {
+		    f_value <- h_value + i_value - n_value
+		    if(!{f_value > h_value}) next
+		    if(!{f_value > m_value + n_value}) next
+			q_value <- m_value + o_value
+		    if(!{q_value > f_value}) next
+			g_value <- h_value + i_value
+		    if(!{g_value > q_value}) next
+			possible_p <- {g_value + 1}:100
+			possible_p <- possible_p[possible_p < o_value + q_value]
+			possible_p <- possible_p[possible_p < g_value + i_value]
+			if(length(possible_p) == 0) next
+			for(p_value in possible_p) {
+			  e_value <- d_value + h_value
+		      if(!{q_value > f_value}) next
+			
+			}
+		  }
+		}
+	  }
+    }
+  }
+}
 
 
 ## start again, this time do it in order of size!
+
+for(i in 1:10) {
+  if(i == 4) next
+  print(i)
+}
