@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>The Actuary Puzzle 508 - Square numbers</title>
+
+<base target="_blank"/>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+</head>
+
+<body>
+<h1>The Actuary Puzzle 508 - Square numbers</h1>
+
+<p>From <a href="http://www.theactuary.com/puzzles-and-games/2012/the-actuary-puzzles-june-2012/">the puzzle pages of The Actuary June 2012</a>, I attempt to solve the following, making use of R:</p>
+
+<blockquote>
+<p>This square contains exactly 21 smaller squares. Each of these smaller<br/>
+squares has sides of integer length, with no two smaller squares having<br/>
+sides of the same length. Can you find a solution for the size of the 21 smaller<br/>
+squares? (Note, the 21st square, n, is between squares f, g, m and o).</p>
+</blockquote>
+
+<p><img src="data:image/png;base64,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" alt="21 squares puzzle"/></p>
+
+<p>The approach I decided to take was to calculate a few relationships and work from there to attempt to find working solutions, instead of working out all necessary equations and completely solving. Although there can be probably be an exhaustive set of calculations leading to some form of order of size (and solution), any assumptions on size are based on size differences guaranteed by adjacent squares and following lines directly, not from comparing printed sizes, so this approach may be missing out on easily excluding some more impossible values this way.</p>
+
+<h2>Initial rules</h2>
+
+<p>Looking at the square and coming up with a few rules hoping to be exhaustive enough, where letter \(x\) here is the value of the length of side on square \(x\):</p>
+
+<ul>
+<li>Values are integers.</li>
+<li>Values are unique.</li>
+<li>\(o > n\)</li>
+<li>\(m = n + o\)</li>
+<li>\(q = m + o\)</li>
+<li>\(l = m + q\)</li>
+<li>\(s = 0.25 * q \Rightarrow 4 | q\), as all values are integers. 
+
+<ul>
+<li>Derivation: \(t + s = l + q \Rightarrow (u + s) + s = l + q \Rightarrow u + 2s = l + q\)
+
+<ul>
+<li>\(\Rightarrow (k + s) + 2s = l + q \Rightarrow k + 3s = l + q\)</li>
+<li>\(\Rightarrow (l + s) + 3s = l + q \Rightarrow l + 4s = l + q\)</li>
+<li>\(\Rightarrow 4s = q\)</li>
+</ul></li>
+</ul></li>
+<li>\(4 | q = m + o = (n + o) + o = n + 2o\), so have that \(4 | n + 2o\).
+
+<ul>
+<li>\(2 | 4\) and \(2 | 2o \Rightarrow 2 | n\), so \(n\) is even.</li>
+</ul></li>
+<li>\(k = l + s\)</li>
+<li>\(u = k + s\)</li>
+<li>\(t = u + s\)</li>
+<li>\(l - n > p > o\)</li>
+<li>\(r = l + t - n -p\)</li>
+<li>\(j = r - p\)</li>
+<li>\(i = j - p\)</li>
+<li>\(g = q + p - i - n - m\)</li>
+<li>\(f = g - n\)</li>
+<li>\(h = g - i\)</li>
+<li>\(e = i + j - h\)</li>
+<li>\(d = e - h\)</li>
+<li>\(c = d + e\)</li>
+<li>\(b = c + d\)</li>
+<li>\(a = b + f\)</li>
+</ul>
+
+<p>The set of numbers are also contrained by the fact that the total length of each side of the large square is consistent (will check this in three ways):</p>
+
+<ul>
+<li>\(a + b + c = u + t + r\)</li>
+<li>\(b + c = k + u\)</li>
+<li>\(b + t = k + e + j\)</li>
+</ul>
+
+<p>Also, the total area of the small squares should sum the total area of the large square:</p>
+
+<ul>
+<li>\((a + b + c)^2 = a^2 + b^2 + c^2 + &hellip; + s^2 + t^2 + u^2\)</li>
+</ul>
+
+<h2>Calculations</h2>
+
+<p>Under these assumptions there are very few lengths which aren&#39;t defined by the lengths of values already determined, so setting up nested loops for searching for working solutions shouldn&#39;t be too computationally intensive. </p>
+
+<p>First decide on maximum values to take across our loops.</p>
+
+<pre><code class="r">max_nn &lt;- 10
+max_oo &lt;- 50
+</code></pre>
+
+<p>Now set up the set of possible values for our first guess (in this case, square \(n\), which is even)</p>
+
+<pre><code class="r">possible_nn &lt;- 2 * 1:(max_nn/2)
+</code></pre>
+
+<p>Instead of stopping the loop at the first solution, will save all of the combinations in a list outside the loop, to see if there are multiple solutions.</p>
+
+<pre><code class="r">possible_solutions &lt;- list()
+i &lt;- 1
+</code></pre>
+
+<p>Now create and check possible values under the rules above, looping across possible values for those not defined strictly by linear sums and moving onto the next possibility when it produces an incorrect combination of values:</p>
+
+<pre><code class="r">for (nn in possible_nn) {
+    possible_oo &lt;- (nn + 1):max_oo  # includes that o &gt; n)
+    for (oo in possible_oo) {
+        mm &lt;- nn + oo
+        qq &lt;- mm + oo
+        if ((qq%%4) != 0) 
+            next
+        ll &lt;- mm + qq
+        if (any(duplicated(c(nn, oo, mm, qq, ll)))) 
+            next
+        ss &lt;- qq/4
+        kk &lt;- ll + ss
+        uu &lt;- kk + ss
+        tt &lt;- uu + ss
+        if (any(duplicated(c(nn, oo, mm, qq, ll, ss, kk, uu, tt)))) 
+            next
+        possible_p &lt;- (oo + 1):(ll - nn - 1)
+        possible_p &lt;- possible_p[!{
+            possible_p %in% c(nn, oo, mm, qq, ll, ss, kk, uu, tt)
+        }]  # filter out values already used, as all numbers must be unique
+        if (length(possible_p) == 0) 
+            next
+        for (pp in possible_p) {
+            rr &lt;- ll + tt - nn - pp
+            jj &lt;- rr - pp
+            ii &lt;- jj - pp
+            gg &lt;- qq + pp - ii - nn - mm
+            ff &lt;- gg - nn
+            hh &lt;- gg - ii
+            ee &lt;- ii + jj - hh
+            dd &lt;- ee - hh
+            cc &lt;- dd + ee
+            bb &lt;- cc + dd
+            aa &lt;- bb + ff
+
+            all_values &lt;- c(a = aa, b = bb, c = cc, d = dd, e = ee, f = ff, 
+                g = gg, h = hh, i = ii, j = jj, k = kk, l = ll, m = mm, n = nn, 
+                o = oo, p = pp, q = qq, r = rr, s = ss, t = tt, u = uu)
+
+            if (any(duplicated(all_values))) 
+                next
+            if (aa + bb + cc != uu + tt + rr) 
+                next
+            if (bb + cc != kk + uu) 
+                next
+            if (bb + tt != kk + ee + jj) 
+                next
+
+            if ((aa + bb + cc)^2 != sum(all_values^2)) 
+                next
+
+            # if execution reaches here, numbers fit criteria:
+            possible_solutions[[i]] &lt;- all_values
+            i &lt;- i + 1
+        }
+    }
+}
+</code></pre>
+
+<p>This produces the following (potential) solutions to the puzzle:</p>
+
+<pre><code>## [[1]]
+##  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u 
+## 50 35 27  8 19 15 17 11  6 24 29 25  9  2  7 18 16 42  4 37 33 
+## 
+## [[2]]
+##   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r 
+## 100  70  54  16  38  30  34  22  12  48  58  50  18   4  14  36  32  84 
+##   s   t   u 
+##   8  74  66 
+## 
+## [[3]]
+##   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r 
+## 150 105  81  24  57  45  51  33  18  72  87  75  27   6  21  54  48 126 
+##   s   t   u 
+##  12 111  99 
+## 
+## [[4]]
+##   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r 
+## 200 140 108  32  76  60  68  44  24  96 116 100  36   8  28  72  64 168 
+##   s   t   u 
+##  16 148 132 
+## 
+## [[5]]
+##   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r 
+## 250 175 135  40  95  75  85  55  30 120 145 125  45  10  35  90  80 210 
+##   s   t   u 
+##  20 185 165 
+## 
+</code></pre>
+
+<p>As you can see, they are seem to be multiples of the first solution (when \(a = 50\), \(b = 35\), etc) suggesting a unique solution up to scalar multiples, but these still need to be confirmed. To do this will now attempt to plot the square with layout from the original puzzle, values from the first produced solution.</p>
+
+<pre><code class="r">library(ggplot2)
+values &lt;- as.list(possible_solutions[[1]])  # use first solution in the list
+</code></pre>
+
+<p>To set up the plot, need to manually create table of values of corner locations for each square. I used the image of the puzzle to create these points based on lengths of all squares in a given solution.</p>
+
+<pre><code class="r">squares &lt;- list()
+
+squares &lt;- with(values, {
+    sq &lt;- list()
+    sq$u &lt;- c(x1 = 0, y1 = 0, x2 = u, y2 = u)
+    sq$u &lt;- c(x1 = 0, y1 = 0, x2 = u, y2 = u)
+    sq$t &lt;- c(x1 = u, y1 = 0, x2 = u + t, y2 = t)
+    sq$r &lt;- c(x1 = u + t, y1 = 0, x2 = u + t + r, y2 = r)
+    sq$k &lt;- c(x1 = 0, y1 = u, x2 = k, y2 = u + k)
+    sq$s &lt;- c(x1 = k, y1 = u, x2 = k + s, y2 = u + s)
+    sq$l &lt;- c(x1 = k, y1 = u + s, x2 = k + l, y2 = u + s + l)
+    sq$q &lt;- c(x1 = k + l, y1 = t, x2 = k + l + q, y2 = t + q)
+    sq$m &lt;- c(x1 = k + l, y1 = t + q, x2 = k + l + m, y2 = t + q + m)
+    sq$o &lt;- c(x1 = k + l + m, y1 = t + q, x2 = k + l + m + o, y2 = t + q + o)
+    sq$n &lt;- c(x1 = k + l + m, y1 = t + q + o, x2 = k + l + m + n, y2 = t + q + 
+        o + n)
+    sq$p &lt;- c(x1 = k + l + q, y1 = r, x2 = k + l + q + p, y2 = r + p)
+    sq$j &lt;- c(x1 = k + l + q + p, y1 = r, x2 = k + l + q + p + j, y2 = r + j)
+    sq$i &lt;- c(x1 = a + f + g, y1 = r + p, x2 = a + f + g + i, y2 = r + i)
+    sq$a &lt;- c(x1 = 0, y1 = k + u, x2 = a, y2 = k + u + a)
+    sq$b &lt;- c(x1 = a, y1 = t + q + m + f, x2 = a + b, y2 = t + q + m + f + b)
+    sq$c &lt;- c(x1 = a + b, y1 = r + j + e, x2 = a + b + c, y2 = r + j + e + c)
+    sq$d &lt;- c(x1 = a + b, y1 = r + j + h, x2 = a + b + d, y2 = r + j + h + d)
+    sq$e &lt;- c(x1 = a + b + d, y1 = r + j, x2 = a + b + d + e, y2 = r + j + e)
+    sq$f &lt;- c(x1 = a, y1 = t + l, x2 = a + f, y2 = t + l + f)
+    sq$g &lt;- c(x1 = a + f, y1 = t + q + o, x2 = a + f + g, y2 = t + q + o + g)
+    sq$h &lt;- c(x1 = a + f + g, y1 = r + j, x2 = a + f + g + h, y2 = r + j + h)
+    sq$i &lt;- c(x1 = a + f + g, y1 = r + p, x2 = a + f + g + i, y2 = r + p + i)
+    return(sq)
+})
+
+squares_df &lt;- data.frame(do.call(&quot;rbind&quot;, squares), square = names(squares))
+squares_df
+</code></pre>
+
+<pre><code>##   x1 y1  x2  y2 square
+## u  0  0  33  33      u
+## t 33  0  70  37      t
+## r 70  0 112  42      r
+## k  0 33  29  62      k
+## s 29 33  33  37      s
+## l 29 37  54  62      l
+## q 54 37  70  53      q
+## m 54 53  63  62      m
+## o 63 53  70  60      o
+## n 63 60  65  62      n
+## p 70 42  88  60      p
+## j 88 42 112  66      j
+## i 82 60  88  66      i
+## a  0 62  50 112      a
+## b 50 77  85 112      b
+## c 85 85 112 112      c
+## d 85 77  93  85      d
+## e 93 66 112  85      e
+## f 50 62  65  77      f
+## g 65 60  82  77      g
+## h 82 66  93  77      h
+</code></pre>
+
+<p>Now plot this to see if it matches the puzzle, using ggplot2 and the geom &ldquo;geom_rect&rdquo; for plotting the rectangles. To achieve random colouring, first rearranged the levels of the factor &ldquo;square&rdquo;:</p>
+
+<pre><code class="r">set.seed(1)
+ggplot(square_positions_df) +  
+  scale_x_continuous(name=&quot;x&quot;) + 
+  scale_y_continuous(name=&quot;y&quot;) +
+  geom_rect(aes(
+      xmin = x1, 
+      xmax = x2, 
+      ymin = y1, 
+      ymax = y2, 
+      fill = factor(square, levels = sample(levels(square)))), 
+    colour = &quot;black&quot;) + 
+  geom_text(aes(
+    x = x1 + (x2 - x1) / 2, 
+    y = y1 + (y2 - y1) / 2, 
+    label = square)) +
+  opts(legend.position = &quot;none&quot;, title = &quot;21 squares&quot;)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk plot_squares"/> </p>
+
+<h1>Final solution!</h1>
+
+<p>As you can see, it has produced a correct solution:</p>
+
+<pre><code class="r">unlist(values)
+</code></pre>
+
+<pre><code>##  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u 
+## 50 35 27  8 19 15 17 11  6 24 29 25  9  2  7 18 16 42  4 37 33 
+</code></pre>
+
+<p>I&#39;m certain that further algebra playing, coming up with more equations perhaps from the picture, this result can be derived without these loops but it was definitely a fun exercise producing a solution this way.</p>
+
+</body>
+
+</html>

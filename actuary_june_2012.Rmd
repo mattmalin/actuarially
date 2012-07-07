@@ -21,15 +21,16 @@ Looking at the square and coming up with a few rules hoping to be exhaustive eno
 * $q = m + o$
 * $l = m + q$
 * $s = 0.25 * q \Rightarrow 4 | q$, as all values are integers. 
-    * Derivation: $t + s = l + q \Rightarrow (u + s) + s = l + q \Rightarrow u + 2s = l + q \Rightarrow (k + s) + 2s = l + q$
-      * $\Rightarrow k + 3s = l + q \Rightarrow (l + s) + 3s = l + q \Rightarrow l + 4s = l + q$
+    * Derivation: $t + s = l + q \Rightarrow (u + s) + s = l + q \Rightarrow u + 2s = l + q$
+	  * $\Rightarrow (k + s) + 2s = l + q \Rightarrow k + 3s = l + q$
+      * $\Rightarrow (l + s) + 3s = l + q \Rightarrow l + 4s = l + q$
 	  * $\Rightarrow 4s = q$
 * $4 | q = m + o = (n + o) + o = n + 2o$, so have that $4 | n + 2o$.
   * $2 | 4$ and $2 | 2o \Rightarrow 2 | n$, so $n$ is even.
 * $k = l + s$
 * $u = k + s$
 * $t = u + s$
-* $o < p < l - n$
+* $l - n > p > o$
 * $r = l + t - n -p$
 * $j = r - p$
 * $i = j - p$
@@ -48,7 +49,7 @@ The set of numbers are also contrained by the fact that the total length of each
 * $b + t = k + e + j$
 
 Also, the total area of the small squares should sum the total area of the large square:
-* $(a + b + c)^2 = a^2 + b^2 + c^2 + d^2 + e^2 + f^2 + g^2 + h^2 + i^2 + j^2 + k^2 + l^2 + m^2 + n^2 + o^2 + p^2 + q^2 + r^2 + s^2 + t^2 + u^2$
+* $(a + b + c)^2 = a^2 + b^2 + c^2 + ... + s^2 + t^2 + u^2$
 
 ## Calculations
 
@@ -75,7 +76,7 @@ Now create and check possible values under the rules above, looping across possi
 
 ```{r possible_value_loop, eval = TRUE}
 for(nn in possible_nn) {
-  possible_oo <- (nn + 1):max_oo  # includes that o > n)
+  possible_oo <- (nn + 1):max_oo  # includes that o > n
   for(oo in possible_oo) {
     mm <- nn + oo
 	qq <- mm + oo
@@ -117,8 +118,7 @@ for(nn in possible_nn) {
 
 	  if((aa + bb + cc)^2 != sum(all_values^2)) next
 	  
-	  # if execution reaches here, numbers fit all of defined criteria
-	  # so may be a solution to the puzzle, append to :
+	  # if execution reaches here, numbers fit criteria:
 	  possible_solutions[[i]] <- all_values
 	  i <- i + 1
 	}
@@ -178,13 +178,22 @@ squares_df
 
 Now plot this to see if it matches the puzzle, using ggplot2 and the geom "geom_rect" for plotting the rectangles. To achieve random colouring, first rearranged the levels of the factor "square":
 
-```{r plot_squares, eval = TRUE}
+```{r plot_squares, eval = TRUE, tidy = FALSE}
 set.seed(1)
 ggplot(square_positions_df) +  
   scale_x_continuous(name="x") + 
   scale_y_continuous(name="y") +
-  geom_rect(aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = factor(square, levels = sample(levels(square)))), colour = "black") + 
-  geom_text(aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = square)) +
+  geom_rect(aes(
+      xmin = x1, 
+	  xmax = x2, 
+	  ymin = y1, 
+	  ymax = y2, 
+	  fill = factor(square, levels = sample(levels(square)))), 
+	colour = "black") + 
+  geom_text(aes(
+    x = x1 + (x2 - x1) / 2, 
+	y = y1 + (y2 - y1) / 2, 
+	label = square)) +
   opts(legend.position = "none", title = "21 squares")
 ```
 
