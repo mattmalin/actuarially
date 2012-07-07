@@ -560,19 +560,24 @@ while(!solved) {
   n <- 
 }
 
-possible_n <- 1:100
+looped_possible <- list()
+i <- 1
+
+max_value <- 60
+
+possible_n <- 1:max_value
 for(n_value in possible_n) {
-  possible_s <- {n_value + 1}:100
+  possible_s <- {n_value + 1}:max_value
   for(s_value in possible_s) {
-    possible_i <- {s_value + 1}:100
+    possible_i <- {s_value + 1}:max_value
     for(i_value in possible_i) {
-      possible_o <- {o_value + 1}:100
+      possible_o <- {i_value + 1}:max_value
       for(o_value in possible_o) {
-	    possible_d <- {o_value + 1):100
+	    possible_d <- {o_value + 1}:max_value
 		for(d_value in possible_d) {
 		  m_value <- n_value + o_value
 		  if(!{m_value > d_value}) next
-		  possible_h <- {m_value + 1}:100
+		  possible_h <- {m_value + 1}:max_value
 		  for(h_value in possible_h) {
 		    f_value <- h_value + i_value - n_value
 		    if(!{f_value > h_value}) next
@@ -581,14 +586,66 @@ for(n_value in possible_n) {
 		    if(!{q_value > f_value}) next
 			g_value <- h_value + i_value
 		    if(!{g_value > q_value}) next
-			possible_p <- {g_value + 1}:100
+			possible_p <- {g_value + 1}:max_value
 			possible_p <- possible_p[possible_p < o_value + q_value]
 			possible_p <- possible_p[possible_p < g_value + i_value]
 			if(length(possible_p) == 0) next
 			for(p_value in possible_p) {
 			  e_value <- d_value + h_value
-		      if(!{q_value > f_value}) next
-			
+		      if(!{e_value > p_value}) next
+			  j_value <- i_value + p_value
+		      if(!{j_value > e_value}) next
+		      if(!{j_value < h_value + e_value}) next
+			  l_value <- m_value + q_value
+		      if(!{l_value > j_value}) next
+			  c_value <- d_value + e_value
+		      if(!{c_value > l_value}) next
+		      if(!{c_value > i_value + j_value}) next
+			  k_value <- s_value + l_value
+		      if(!{k_value > c_value}) next
+			  u_value <- k_value + s_value
+		      if(!{u_value > k_value}) next
+		      if(!{u_value < l_value + q_value}) next
+			  b_value <- c_value + d_value
+		      if(!{b_value > u_value}) next
+		      if(!{b_value > f_value + g_value}) next
+		      if(!{b_value < f_value + g_value + h_value}) next
+		      if(b_value + c_value != k_value + u_value) next
+			  t_value <- s_value + u_value
+		      if(!{t_value > b_value}) next
+			  r_value <- p_value + j_value
+		      if(!{r_value > t_value}) next
+			  a_value <- b_value + f_value
+		      if(!{a_value > r_value}) next
+		      
+			  #if(!{b_value + f_value + m_value + q_value + t_value == a_value + b_value + c_value}) next
+			  if(!{f_value + m_value + q_value + t_value == a_value + c_value}) next
+			  			  
+			  looped_possible[[i]] <- c(
+			    a = a_value, 
+				b = b_value, 
+				c = c_value, 
+				d = d_value, 
+				e = e_value, 
+				f = f_value, 
+				g = g_value, 
+				h = h_value, 
+				i = i_value, 
+				j = j_value, 
+				k = k_value, 
+				l = l_value, 
+				m = m_value, 
+				n = n_value, 
+				o = o_value, 
+				p = p_value, 
+				q = q_value, 
+				r = r_value, 
+				s = s_value, 
+				t = t_value, 
+				u = u_value)
+			  print(i)
+			  print(looped_possible[[i]])
+			  i <- i + 1
 			}
 		  }
 		}
@@ -598,9 +655,32 @@ for(n_value in possible_n) {
 }
 
 
-## start again, this time do it in order of size!
-
-for(i in 1:10) {
-  if(i == 4) next
-  print(i)
-}
+#  c("a", "b", "c"),
+  c("a", "b", "d", "e"),
+  c("a", "f", "g", "h", "e"), 
+  c("a", "f", "g", "i", "j"), 
+  c("k", "l", "m", "n", "g", "h", "e"), 
+  c("k", "l", "m", "n", "g", "i", "j"), 
+  c("k", "l", "q", "p", "j"), 
+  c("k", "l", "m", "o", "p", "j"), 
+  c("k", "l", "q", "p", "j"), 
+  c("k", "l", "q", "r"), 
+  c("k", "s", "t", "r"), 
+  c("u", "t", "r"), 
+  c("a", "k", "u"), 
+  c("a", "l", "s", "u"), 
+  c("a", "l", "t"), 
+  c("b", "f", "m", "q", "t"), 
+  c("b", "f", "n", "o", "q", "t"), 
+  c("b", "f", "n", "p", "r"), 
+  c("b", "g", "o", "q", "t"), 
+  c("b", "g", "p", "r"), 
+  c("b", "h", "i", "p", "r"), 
+  c("b", "h", "j", "r"), 
+  c("b", "h", "i", "o", "q", "t"), 
+  c("c", "d", "h", "i", "o", "q", "t"), 
+  c("c", "d", "h", "i", "p", "r"), 
+  c("c", "d", "h", "j", "r"), 
+  c("c", "e", "i", "o", "q", "t"), 
+  c("c", "e", "i", "p", "r"), 
+  c("c", "e", "j", "r")
