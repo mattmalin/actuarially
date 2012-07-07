@@ -1,13 +1,45 @@
 ################################################################################
 # New approach: start small!
 ################################################################################
+
+# The approach taken was to calculate a few relationships (instead of working out 
+# all necessary equations, will work from a few and attempt to find working solutions.
+
+# Although there can be probably be an exhaustive set of calculations leading to 
+# some form of order of size, any assumptions on size are based on adjacent squares 
+# and following lines directly, not from comparing printed sizes, so may be missing out
+# on easily excluding some more impossible values this way.
+
+# Looking at the square and coming up with a few rules hoping to be exhaustive enough:
+
+# * Unique integer values
+# * o > n
+# * m = n + o
+# * q = m + o
+# * l = m + q
+# * s = 0.25 * q 
+#   => 4 | q (as all values are integers) 
+#   => 4 | m + o = (n + o) + o = n + 2o 
+#   => 4 | n + 2o => 2 | n (i.e. n is even)
+#  Derivation: 
+#   * t + s = l + q => (u + s) + s = l + q => u + 2s = l + q => (k + s) + 2s = l + q
+#     => k + 3s = l + q => (l + s) + 3s = l + q => l + 4s = l + q => 4s = q)
+# * k = l + s
+# * 
+
+# First decide on maximum values to take across our loops 
+# Using loops here, despite inefficiency, for ease of understanding):
+max_n_value <- 50
+max_o_value <- 100
+
+# Now set up the set of possible values for our first guess (in this case, square n)
+possible_n <- 1:max_n_value
+
+# Instead of stopping the loop, will save the combinations in a list outside the loop: 
 looped_possible <- list()
 i <- 1
 
-max_n_value <- 10
-max_o_value <- 20
-
-possible_n <- 1:max_n_value
+# Now cycle through the possible values for n
 for(n_value in possible_n) {
   possible_o <- {n_value + 1}:max_o_value  # includes that o > n)
   for(o_value in possible_o) {
@@ -15,6 +47,7 @@ for(n_value in possible_n) {
 	q_value <- m_value + o_value
 	l_value <- m_value + q_value
 	if(any(duplicated(c(n_value, o_value, m_value, q_value, l_value)))) next
+	s_value <- 
 	possible_s <- 1:{l_value - 1} # includes that s < l
 	possible_s <- possible_s[!{possible_s %in% c(n_value, o_value, m_value, q_value, l_value)}] # uniques
 	if(length(possible_s) == 0) next
@@ -61,3 +94,4 @@ for(n_value in possible_n) {
 }
 
 print(looped_possible)
+saveRDS(looped_possible, "c:/matt/temp/looped_possible.rds")
