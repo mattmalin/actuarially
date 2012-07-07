@@ -554,6 +554,9 @@ all_possible_values[["f"]]
 # start with all_possible_values
 possible_values <- all_possible_values
 
+max_values <- lapply(all_possible_values, max)
+max_values <- lapply(all_possible_values, FUN = function(x) 80)
+
 while(!solved) {
   # set n:
   possible_values[["n"]] <- possible_values[["n"]][1]
@@ -565,89 +568,86 @@ i <- 1
 
 max_value <- 60
 
-possible_n <- 1:max_value
+possible_n <- 2*{1:{max_value / 2}}
 for(n_value in possible_n) {
-  possible_s <- {n_value + 1}:max_value
+  possible_s <- {n_value + 1}:max_values[["s"]]
   for(s_value in possible_s) {
-    possible_i <- {s_value + 1}:max_value
+    possible_i <- {s_value + 1}:max_values[["i"]]
     for(i_value in possible_i) {
-      possible_o <- {i_value + 1}:max_value
+      possible_o <- {i_value + 1}:max_values[["o"]]
       for(o_value in possible_o) {
-	    possible_d <- {o_value + 1}:max_value
+	    possible_d <- {o_value + 1}:max_values[["d"]]
 		for(d_value in possible_d) {
 		  m_value <- n_value + o_value
 		  if(!{m_value > d_value}) next
-		  possible_h <- {m_value + 1}:max_value
-		  for(h_value in possible_h) {
-		    f_value <- h_value + i_value - n_value
-		    if(!{f_value > h_value}) next
-		    if(!{f_value > m_value + n_value}) next
-			q_value <- m_value + o_value
-		    if(!{q_value > f_value}) next
-			g_value <- h_value + i_value
-		    if(!{g_value > q_value}) next
-			possible_p <- {g_value + 1}:max_value
-			possible_p <- possible_p[possible_p < o_value + q_value]
-			possible_p <- possible_p[possible_p < g_value + i_value]
-			if(length(possible_p) == 0) next
-			for(p_value in possible_p) {
-			  e_value <- d_value + h_value
-		      if(!{e_value > p_value}) next
-			  j_value <- i_value + p_value
-		      if(!{j_value > e_value}) next
-		      if(!{j_value < h_value + e_value}) next
-			  l_value <- m_value + q_value
-		      if(!{l_value > j_value}) next
-			  c_value <- d_value + e_value
-		      if(!{c_value > l_value}) next
-		      if(!{c_value > i_value + j_value}) next
-			  k_value <- s_value + l_value
-		      if(!{k_value > c_value}) next
-			  u_value <- k_value + s_value
-		      if(!{u_value > k_value}) next
-		      if(!{u_value < l_value + q_value}) next
-			  b_value <- c_value + d_value
-		      if(!{b_value > u_value}) next
-		      if(!{b_value > f_value + g_value}) next
-		      if(!{b_value < f_value + g_value + h_value}) next
-		      if(b_value + c_value != k_value + u_value) next
-			  t_value <- s_value + u_value
-		      if(!{t_value > b_value}) next
-			  r_value <- p_value + j_value
-		      if(!{r_value > t_value}) next
-			  a_value <- b_value + f_value
-		      if(!{a_value > r_value}) next
-		      
-			  #if(!{b_value + f_value + m_value + q_value + t_value == a_value + b_value + c_value}) next
-			  if(!{f_value + m_value + q_value + t_value == a_value + c_value}) next
-			  			  
-			  looped_possible[[i]] <- c(
-			    a = a_value, 
-				b = b_value, 
-				c = c_value, 
-				d = d_value, 
-				e = e_value, 
-				f = f_value, 
-				g = g_value, 
-				h = h_value, 
-				i = i_value, 
-				j = j_value, 
-				k = k_value, 
-				l = l_value, 
-				m = m_value, 
-				n = n_value, 
-				o = o_value, 
-				p = p_value, 
-				q = q_value, 
-				r = r_value, 
-				s = s_value, 
-				t = t_value, 
-				u = u_value)
-			  print(i)
-			  print(looped_possible[[i]])
-			  i <- i + 1
-			}
-		  }
+		  h_value <- 4 * d_value + m_value - 5 * i_value - n_value
+		  if(!{h_value > m_value}) next
+		  f_value <- h_value + i_value - n_value
+		  if(!{f_value > h_value}) next
+		  if(!{f_value > m_value + n_value}) next
+	      q_value <- m_value + o_value
+		  if(!{q_value > f_value}) next
+	      g_value <- h_value + i_value
+		  if(!{g_value > q_value}) next
+          p_value <- n_value + g_value + i_value - o_value
+		  if(!{p_value > g_value}) next
+		  if(!{p_value < o_value + q_value}) next
+		  if(!{p_value < g_value + i_value}) next
+	      #browser()
+	      e_value <- d_value + h_value
+		  if(!{e_value > p_value}) next
+	      j_value <- i_value + p_value
+		  if(!{j_value > e_value}) next
+		  if(!{j_value < h_value + e_value}) next
+	      l_value <- m_value + q_value
+		  if(!{l_value > j_value}) next
+	      c_value <- d_value + e_value
+		  if(!{c_value > l_value}) next
+		  if(!{c_value > i_value + j_value}) next
+	      k_value <- s_value + l_value
+		  if(!{k_value > c_value}) next
+	      u_value <- k_value + s_value
+		  if(!{u_value > k_value}) next
+		  if(!{u_value < l_value + q_value}) next
+	      b_value <- c_value + d_value
+		  if(!{b_value > u_value}) next
+		  if(!{b_value > f_value + g_value}) next
+		  if(!{b_value < f_value + g_value + h_value}) next
+		  if(b_value + c_value != k_value + u_value) next
+	      t_value <- s_value + u_value
+		  if(!{t_value > b_value}) next
+	      r_value <- p_value + j_value
+		  if(!{r_value > t_value}) next
+	      a_value <- b_value + f_value
+ 		  if(!{a_value > r_value}) next
+		  if(!{f_value + m_value + q_value + t_value == a_value + c_value}) next
+		  if(!{a_value + b_value + c_value == u_value + t_value + r_value}) next
+		  			  
+		  looped_possible[[i]] <- c(
+		    a = a_value, 
+		  b = b_value, 
+		  c = c_value, 
+		  d = d_value, 
+		  e = e_value, 
+		  f = f_value, 
+		  g = g_value, 
+		  h = h_value, 
+		  i = i_value, 
+		  j = j_value, 
+		  k = k_value, 
+		  l = l_value, 
+		  m = m_value, 
+		  n = n_value, 
+		  o = o_value, 
+		  p = p_value, 
+		  q = q_value, 
+		  r = r_value, 
+		  s = s_value, 
+		  t = t_value, 
+		  u = u_value)
+		  print(i)
+		  print(looped_possible[[i]])
+		  i <- i + 1
 		}
 	  }
     }
