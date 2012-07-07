@@ -1,4 +1,4 @@
 actuarially
 ===========
 
-actuarially blog posts
+Blog posts and related material for Actuarially (www.actuarially.co.uk)
