@@ -204,7 +204,7 @@ Now plot this to see if it matches the puzzle, using ggplot2 and the geom "geom_
 
 ```{r plot_squares, eval = TRUE, tidy = FALSE}
 set.seed(1)
-ggplot(square_positions_df) +  
+ggplot(squares_df) +  
   scale_x_continuous(name="x") + 
   scale_y_continuous(name="y") +
   geom_rect(aes(
