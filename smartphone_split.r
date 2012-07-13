@@ -31,6 +31,9 @@ phone_manufacturer_split <- data.frame(
 	0.009, 0.006
   )
 )
+# Some checks:
+sum(phone_manufacturer_split$share) # should be 1
+# [1] 1
 
 
 combined <- aggregate(share ~ operating_system , phone_manufacturer_split, sum)
@@ -42,19 +45,36 @@ phone_manufacturer_split <- merge(
   phone_manufacturer_split, 
   combined[c("operating_system", "os_share", "os_midpoint")], 
   by = "operating_system")
-  
 
-# Some checks:
+phone_manufacturer_split <- within(
+  phone_manufacturer_split,
+  percentage_of_os_split <- share / os_share)
 
-sum(phone_manufacturer_split$share) # should be 1
-# [1] 1
+# the actually GOOD plot: 
+ggplot(phone_manufacturer_split, aes(x = factor(operating_system, levels = combined$operating_system[order(combined$os_share, decreasing = TRUE)]), y = share, fill = manufacturer)) + geom_bar()
+
+
+ggplot(phone_manufacturer_split, aes(x = os_midpoint, y = share, fill = manufacturer)) + 
+  geom_bar() +
+  scale_x_continuous(breaks = combined$os_midpoint, labels = combined$operating_system)
 
 library(ggplot2)
 
-the_plot <- ggplot(phone_manufacturer_split, aes(x = operating_system, y = share, fill = manufacturer)) 
-
-the_plot <- the_plot + geom_bar(aes(width = os_share))
+the_plot <- ggplot(phone_manufacturer_split, aes(x = os_midpoint, y = percentage_of_os_split, fill = manufacturer)) 
+the_plot <- the_plot + geom_bar(aes(width = os_share), stat = "identity", position = "stack")
+the_plot <- the_plot + geom_text(aes( x = os_midpoint, y = percentage_of_os_split, label = manufacturer), position = "stack")
 the_plot
+
+
+
+
+#####
+
+ggplot(phone_manufacturer_split, aes(x = os_midpoint, y = percentage_of_os_split, 
+
+the_plot + scale_x_discrete(breaks = combined$os_midpoint, )
+
+the_plot <- the_plot + geom_tile(aes(width = os_share))
 
 ggplot(phone_manufacturer_split, aes(x = os_share, y = share, fill = factor(manufacturer))) + geom_tile()
 ggplot(phone_manufacturer_split, aes(x = os_share, y = share, fill = factor(manufacturer), width = os_share)) + geom_tile(position = "fill")
