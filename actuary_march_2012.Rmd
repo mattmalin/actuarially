@@ -1,0 +1,7 @@
+# Circular fasion puzzle (The Actuary magazine Puzzle 498)
+
+From [the puzzle pages of The Actuary March 2012](http://www.theactuary.com/puzzles-and-games/2012/the-actuary-puzzles-march-2012/), I attempt to solve the following, making use of R:
+
+> TODO: text
+
+![puzzle_498](png_file_to_do)
