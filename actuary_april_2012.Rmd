@@ -1,6 +1,6 @@
-# Gridlock puzzle (The Actuary magazine Puzzle 500)
+# Gridlock puzzle (The Actuary - Puzzle 500)
 
-From [the puzzle pages of The Actuary April 2012](http://www.theactuary.com/puzzles-and-games/2012/the-actuary-puzzles-april-2012/), I attempt to solve the following, making use of R:
+From [the puzzle pages of The Actuary magazine, April 2012](http://www.theactuary.com/puzzles-and-games/2012/the-actuary-puzzles-april-2012/), I attempt to solve the following, making use of R:
 
 > Below is a grid containing nine shaded squares, and around each shaded
 > square are eight white squares. However, each white square should
@@ -11,3 +11,102 @@ From [the puzzle pages of The Actuary April 2012](http://www.theactuary.com/puzz
 
 ![gridlock puzzle](actuary_april_2012.png)
 
+Applying sum totals:
+
+```{r}
+
+some_matrix <- matrix(1:49, 7, 7)
+
+cycled <- matrix(
+  c(1:7, 2:7, 1, 3:7, 1:2, 4:7, 1:3, 5:7, 1:4, 6:7, 1:5, 7, 1:6),
+  7,
+  7)
+ 
+sum_around_evenly_indexed_squares <- function(some_matrix) {
+  matrix_dims <- dim(some_matrix) 
+  if(matrix_dims[1] != matrix_dims[2]) stop("matrix not square!")
+  
+  number_even_rows <- floor(matrix_dims[1] / 2)
+  number_even_cols <- floor(matrix_dims[2] / 2)
+  
+  some_matrix[2 * 1:number_even_rows, 2 * 1:number_even_cols] <- NA
+  
+  for(i in 2 * (1:number_even_rows)) {
+    for(j in 2 * (1:number_even_cols)) {
+	  some_matrix[i, j] <- sum(some_matrix[(i - 1):(i + 1), (j - 1):(j + 1)], na.rm = TRUE)
+	}
+  }
+  
+  return(some_matrix)  
+}
+
+only_evens <- function(some_matrix) {
+  matrix_dims <- dim(some_matrix) 
+  number_even_rows <- floor(matrix_dims[1] / 2)
+  number_even_cols <- floor(matrix_dims[2] / 2)
+
+  return(
+    some_matrix[2 * 1:number_even_rows, 2 * 1:number_even_cols])
+}
+
+possible_first_entry <- 1:7
+for(`1_1` in possible_first_entry) {
+  
+}
+
+
+formula_around_evenly_indexed_squares <- function(some_matrix) {
+  matrix_dims <- dim(some_matrix) 
+  if(matrix_dims[1] != matrix_dims[2]) stop("matrix not square!")
+  
+  number_even_rows <- floor(matrix_dims[1] / 2)
+  number_even_cols <- floor(matrix_dims[2] / 2)
+  
+  some_matrix[2 * 1:number_even_rows, 2 * 1:number_even_cols] <- NA
+  
+  for(i in 2 * (1:number_even_rows)) {
+    for(j in 2 * (1:number_even_cols)) {
+	  some_matrix[i, j] <- paste(
+	    some_matrix[(i - 1), (j - 1):(j + 1)],
+	    some_matrix[(i), c((j - 1), (j + 1))],
+	    some_matrix[(i + 1), (j - 1):(j + 1)],
+		sep = " + ",
+		collapse = " + ")
+	}
+  }
+  
+  return(some_matrix)  
+}
+
+only_evens(formula_around_evenly_indexed_squares(some_matrix))
+
+letters_matrix <- matrix(c(letters[1:26], LETTERS[1:{49-26}]), 7, 7)
+only_non_evens <- letters_matrix[!{letters_matrix %in% only_evens(letters_matrix)}]
+
+letters_sums <- only_evens(formula_around_evenly_indexed_squares(letters_matrix))
+
+target_sums <- matrix(
+  c(26, 36, 37,
+    31, 36, 39,
+    38, 26, 24),
+  3, 
+  3,
+  byrow = TRUE)
+
+matrix_guess <- matrix(NA, 7, 7)
+
+possibilities <- matrix(list(1:7), 7, 7)
+possibilities[2 * (1:3), 2 * (1:3)] <- NA
+  
+sum_around_evenly_indexed_squares(matrix_guess)
+
+  
+paste(letters_sums, target_sums, sep = " = ")
+
+
+  
+26 + 36 + 37 +
+31 + 36 + 39 +
+38 + 26 + 24
+
+```
