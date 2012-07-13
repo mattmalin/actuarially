@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>Gridlock puzzle (The Actuary magazine Puzzle 500)</title>
+
+<base target="_blank"/>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>Gridlock puzzle (The Actuary magazine Puzzle 500)</h1>
+
+<p>From <a href="http://www.theactuary.com/puzzles-and-games/2012/the-actuary-puzzles-april-2012/">the puzzle pages of The Actuary April 2012</a>, I attempt to solve the following, making use of R:</p>
+
+<blockquote>
+<p>Below is a grid containing nine shaded squares, and around each shaded<br/>
+square are eight white squares. However, each white square should<br/>
+contain an integer from 1 to 7. Once fi lled in, the eight numbers surrounding<br/>
+each shaded square should sum to the number in the shaded square. In<br/>
+addition, no row or column can contain a duplicate number used within a<br/>
+white square. Can you complete the grid?</p>
+</blockquote>
+
+<p><img src="data:image/png;base64,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" alt="gridlock puzzle"/></p>
+
+</body>
+
+</html>
