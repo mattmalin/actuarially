@@ -1,0 +1,100 @@
+```{r setup}
+library(XML)
+library(ggplot2)
+
+swimming_path <- "http://www.databasesports.com/olympics/sport/sportevent.htm?sp=SWI&enum=200"
+
+swimming_data <- readHTMLTable(
+  readLines(swimming_path), 
+  header = TRUE, 
+  which = 3, 
+  stringsAsFactors = FALSE)
+  
+swimming_data[["Result"]] <- as.numeric(swimming_data[["Result"]])
+swimming_data[["Year"]]   <- as.numeric(swimming_data[["Year"]])
+swimming_data             <- na.omit(swimming_data)
+
+loess_prediction <- function(
+  medal_type = "GOLD", 
+  prediction_year = 2012) 
+{
+  medal_type <- toupper(medal_type)
+ 
+ swimming_loess <- loess(
+    Result ~ Year, 
+    subset(swimming_data, Medal == medal_type),
+    control = loess.control(surface = "direct"))
+  
+  swimming_prediction <- predict(
+    swimming_loess, 
+	data.frame(Year = prediction_year), 
+	se = FALSE)
+	
+  return(swimming_prediction)
+}
+
+log_lm_prediction <- function(
+  medal_type = "GOLD", 
+  prediction_year = 2012) 
+{
+  medal_type <- toupper(medal_type)
+  swimming_log_lm <- lm(
+    log(Result) ~ Year, 
+    subset(swimming_data, Medal == medal_type))
+  
+  swimming_prediction <- exp(predict(
+    swimming_log_lm, 
+	data.frame(Year = prediction_year), 
+	se = FALSE))
+
+  return(swimming_prediction)
+}
+
+swimming_data <- rbind(
+  data.frame(
+    swimming_data[c("Year", "Medal", "Result")], 
+	type = "actual"),
+  data.frame(
+    Year = rep(2012, 3),
+	Medal = c("GOLD", "SILVER", "BRONZE"),
+	Result = c(
+	  loess_prediction("gold"), 
+	  loess_prediction("silver"),
+	  loess_prediction("bronze")),
+	type = rep("loess_prediction", 3)))
+
+swimming_plot <- ggplot(
+  swimming_data,
+  aes(
+    x = Year, 
+	y = Result, 
+	colour = Medal, 
+	group = Medal)) + 
+  scale_x_continuous(limits = c(1968, 2012)) +
+  geom_point() + 
+  stat_smooth(
+    aes(fill = Medal), 
+	alpha = 0.25, 
+	data = subset(swimming_data, type = "actual"), 
+	fullrange = FALSE, 
+	method = loess)
+```
+
+The gold prediction for 2012 is `r loess_prediction("gold")`, for silver is `r loess_prediction("silver")` and for bronze is `r loess_prediction("bronze")`.
+
+```{r, tidy = FALSE, echo = TRUE}
+swimming_log_lm_gold   <- log_lm_prediction("gold")
+swimming_log_lm_silver <- log_lm_prediction("silver")
+swimming_log_lm_bronze <- log_lm_prediction("bronze")
+```
+
+```{r log_lm_predictions}
+swimming_log_lm_gold
+swimming_log_lm_silver
+swimming_log_lm_bronze
+```
+
+
+```{r plot, echo = FALSE}
+swimming_plot
+```
