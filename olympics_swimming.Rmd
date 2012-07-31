@@ -1,3 +1,6 @@
+# 2012 Olympics Swimming - 100m Butterfly Men prediction
+
+Inspired by ![mages' blog](http://lamages.blogspot.co.uk/2012/07/london-olympics-and-prediction-for-100m.html])
 ```{r setup, tidy = FALSE}
 library(XML)
 library(ggplot2)
@@ -29,7 +32,7 @@ loess_prediction <- function(
     swimming_loess, 
 	data.frame(Year = prediction_year), 
 	se = FALSE)
-	
+
   return(swimming_prediction)
 }
 
@@ -63,6 +66,11 @@ swimming_data <- rbind(
 	  loess_prediction("bronze")),
 	type = rep("loess_prediction", 3)))
 
+medal_colours <- c(
+  GOLD   = rgb(201, 137, 16, maxColorValue = 255),
+  SILVER = rgb(168, 168, 168, maxColorValue = 255),
+  BRONZE = rgb(150, 90, 56, maxColorValue = 255))
+		
 swimming_plot <- ggplot(
   swimming_data,
   aes(
@@ -93,7 +101,6 @@ swimming_log_lm_gold
 swimming_log_lm_silver
 swimming_log_lm_bronze
 ```
-
 
 ```{r plot, echo = FALSE}
 swimming_plot
