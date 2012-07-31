@@ -1,4 +1,4 @@
-```{r setup}
+```{r setup, tidy = FALSE}
 library(XML)
 library(ggplot2)
 
@@ -82,7 +82,7 @@ swimming_plot <- ggplot(
 
 The gold prediction for 2012 is `r loess_prediction("gold")`, for silver is `r loess_prediction("silver")` and for bronze is `r loess_prediction("bronze")`.
 
-```{r, tidy = FALSE, echo = TRUE}
+```{r tidy = FALSE, echo = TRUE}
 swimming_log_lm_gold   <- log_lm_prediction("gold")
 swimming_log_lm_silver <- log_lm_prediction("silver")
 swimming_log_lm_bronze <- log_lm_prediction("bronze")
