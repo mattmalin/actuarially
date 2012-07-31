@@ -86,6 +86,10 @@ swimming_plot <- ggplot(
 	data = subset(swimming_data, type = "actual"), 
 	fullrange = FALSE, 
 	method = loess)
+	
+swimming_plot <- swimming_plot + 
+  scale_fill_manual(values = medal_colours) + 
+  scale_colour_manual(values = medal_colours) + theme_bw()
 ```
 
 The gold prediction for 2012 is `r loess_prediction("gold")`, for silver is `r loess_prediction("silver")` and for bronze is `r loess_prediction("bronze")`.
