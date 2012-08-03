@@ -108,7 +108,7 @@ I now use the functions loess_prediction and log_lm_prediction to estimate the
 times for the medal winning times.
 
 ### Loess predictions
-The gold prediction for 2012 is `r format(loess_prediction("gold"), digits = 3, nsmall = 1)` seconds, for silver is `r format(loess_prediction("silver"), digits = 3, nsmall = 1)` seconds, and for bronze is `r format(loess_prediction("bronze"), digits = 3, nsmall = 1)`.
+The gold prediction for 2012 is `r format(loess_prediction("gold"), digits = 3, nsmall = 1)` seconds, for silver is `r format(loess_prediction("silver"), digits = 3, nsmall = 1)` seconds, and for bronze is `r format(loess_prediction("bronze"), digits = 3, nsmall = 1)` seconds.
 
 ### Linear modelling (of log results)
 I've shown the code here for the calls to the linear modelling approach:
@@ -135,7 +135,7 @@ setting as defaults from geom_smooth:
 swimming_plot
 ```
 
-##
+## Notes
 
 Note that because of the small difference between the silver and gold medal 
 results at the 2008 olympics, the trend of improvement in silver exceeds that
@@ -146,3 +146,23 @@ Also note that this takes into account no information about performance of
 athletes involved or changes in rules, such as being unable to use the swimsuits
 that were present in the last Olympics and largely attributed to improving 
 performance, purely modelling from a few data points as an interesting exercise!
+
+## Final Summary
+
+To summarise, the final predicted results using these methods are:
+```{r final_summary, echo = TRUE, tidy = FALSE, eval = TRUE, results = "asis"}
+library(pander)
+predictions <- data.frame(
+  Medal = c("Gold", "Silver", "Bronze"),
+  Loess_prediction = c(
+    loess_prediction("gold"),
+    loess_prediction("silver"),
+    loess_prediction("bronze")),
+  Log_Linear_prediction = c(
+    log_lm_prediction("gold"),
+    log_lm_prediction("silver"),
+    log_lm_prediction("bronze")))
+pandoc.table(predictions)
+```
+
+Now let's see what actually happens, and if it'll be Michael Phelps yet again!
