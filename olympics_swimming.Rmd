@@ -1,18 +1,29 @@
-# 2012 Olympics Swimming - 100m Butterfly Men prediction
+# 2012 Olympics Swimming - 100m Butterfly Men Finals prediction
 
-Inspired by ![mages' blog](http://lamages.blogspot.co.uk/2012/07/london-olympics-and-prediction-for-100m.html])
+*Author: Matt Malin*
+
+Inspired by [mages' blog](http://lamages.blogspot.co.uk/2012/07/london-olympics-and-prediction-for-100m.html)
+with predictions for 100m running times, I've decided to perform some basic 
+modelling (loess and linear modelling) on previous Olympic results for the 100m 
+Butterfly Men's medal winning results.
+
+## Code setup
 ```{r setup, tidy = FALSE}
 library(XML)
 library(ggplot2)
 
 swimming_path <- "http://www.databasesports.com/olympics/sport/sportevent.htm?sp=SWI&enum=200"
+swimming_path <- "c:/matt/temp/actuarially/Swimming Olympic Medal Winners.htm"
 
 swimming_data <- readHTMLTable(
   readLines(swimming_path), 
-  header = TRUE, 
   which = 3, 
   stringsAsFactors = FALSE)
-  
+
+# due to some potential errors in passing header = TRUE:
+names(swimming_data) <- swimming_data[1, ]
+swimming_data <- swimming_data[-1, ]
+
 swimming_data[["Result"]] <- as.numeric(swimming_data[["Result"]])
 swimming_data[["Year"]]   <- as.numeric(swimming_data[["Year"]])
 swimming_data             <- na.omit(swimming_data)
@@ -92,7 +103,15 @@ swimming_plot <- swimming_plot +
   scale_colour_manual(values = medal_colours) + theme_bw()
 ```
 
-The gold prediction for 2012 is `r loess_prediction("gold")`, for silver is `r loess_prediction("silver")` and for bronze is `r loess_prediction("bronze")`.
+## Predictions
+I now use the functions loess_prediction and log_lm_prediction to estimate the
+times for the medal winning times.
+
+### Loess predictions
+The gold prediction for 2012 is `r format(loess_prediction("gold"), digits = 3, nsmall = 1)` seconds, for silver is `r format(loess_prediction("silver"), digits = 3, nsmall = 1)` seconds, and for bronze is `r format(loess_prediction("bronze"), digits = 3, nsmall = 1)`.
+
+### Linear modelling (of log results)
+I've shown the code here for the calls to the linear modelling approach:
 
 ```{r tidy = FALSE, echo = TRUE}
 swimming_log_lm_gold   <- log_lm_prediction("gold")
@@ -100,12 +119,30 @@ swimming_log_lm_silver <- log_lm_prediction("silver")
 swimming_log_lm_bronze <- log_lm_prediction("bronze")
 ```
 
+This gives the following times as predictions:
+
 ```{r log_lm_predictions}
 swimming_log_lm_gold
 swimming_log_lm_silver
 swimming_log_lm_bronze
 ```
 
+### Loess prediction plot
+The following is a plot of actual and predicted times, along with loess error
+setting as defaults from geom_smooth:
+
 ```{r plot, echo = FALSE}
 swimming_plot
 ```
+
+##
+
+Note that because of the small difference between the silver and gold medal 
+results at the 2008 olympics, the trend of improvement in silver exceeds that
+in the gold, so the prediction is that the silver time will be faster than the 
+gold!
+
+Also note that this takes into account no information about performance of 
+athletes involved or changes in rules, such as being unable to use the swimsuits
+that were present in the last Olympics and largely attributed to improving 
+performance, purely modelling from a few data points as an interesting exercise!
