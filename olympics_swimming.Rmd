@@ -165,4 +165,4 @@ predictions <- data.frame(
 pandoc.table(predictions)
 ```
 
-Now let's see what actually happens, and if it'll be Michael Phelps yet again!
+Obviously the predictions here are very crudely performed, especially given that it produces a faster time for a silver medal than for gold, but it’ll still be interesting to see what actually happens, and if it’ll be Michael Phelps yet again!
