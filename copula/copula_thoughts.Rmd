@@ -1,0 +1,19 @@
+# Spearman's correlation vs t copula parameter
+
+From [Wei Liu - Currencies Portfolio Return: A Copula Methodology]([http://homes.chass.utoronto.ca/~weiliu/copuladist6new1.pdf), a formula for Spearman's rho (the correlation between the ranks) is:
+
+$latex
+12 \int_{\left[0, 1\right]^2}C(u,v)dudv - 3
+$,
+
+where $C$ is a copula, in this case a t copula, with parameter $\rho$ and degrees of freedom $\nu$.
+
+Our copula $C$ can be written as:^[1][1] 
+
+$latex
+C_{\nu, \rho}(u, v) = t^2_{\nu, \rho}\left[t^{-1}_{\nu}, t^{-1}_{\nu}\right]
+$
+
+
+
+[1]: http://homes.chass.utoronto.ca/~weiliu/copuladist6new1.pdf "Wei Liu - Currencies Portfolio Return: A Copula Methodology"
