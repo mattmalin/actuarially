@@ -1,7 +1,7 @@
 # Spearman's correlation vs t copula parameter
 
 From [Wei Liu - Currencies Portfolio Return: A Copula Methodology]([http://homes.chass.utoronto.ca/~weiliu/copuladist6new1.pdf), a formula for Spearman's rho (the correlation between the ranks) is:
-
+#'
 $latex
 12 \int_{\left[0, 1\right]^2}C(u,v)dudv - 3
 $,
@@ -14,6 +14,56 @@ $latex
 C_{\nu, \rho}(u, v) = t^2_{\nu, \rho}\left[t^{-1}_{\nu}, t^{-1}_{\nu}\right]
 $
 
+```{r}
+library(ggplot2)
 
+h <- function(deg_f) {
+  {pi / 6} + {1 / (0.44593 + 1.3089 * deg_f)}
+}
+
+spearman_from_param <- function(param, deg_f = 2) {
+  asin(param * sin(h(deg_f))) / h(deg_f)
+}
+
+
+spearman_from_param(0.6) - 0.6
+qt(0.6, 2) - qt(0.6, Inf)
+
+spearman_from_param(0.3)
+qt(0.3, 2)
+qt(0.3, Inf)
+
+seq_to_use <- seq(-0.623, -0.622, by = 0.0000000001)
+
+params <- data.frame(
+  param = seq_to_use,
+  spearman = sapply(seq_to_use, spearman_from_param)
+  )
+
+ggplot(params, aes(x = param, y = spearman)) + geom_line() + geom_line(data = data.frame(param = c(-1, 1), spearman = c(-1, 1)), colour = "purple")
+
+plot(seq_to_use, seq_to_use - params$spearman)
+
+diffs <- seq_to_use - params$spearman
+plot(seq_to_use, dt(diffs, df = 2))
+
+seq_to_use[order(diffs)][1]
+
+dev.new()
+plot(1 / seq_to_use, qt(seq_to_use, df = Inf))
+
+# minimum point is +/- 0.6226074
+
+
+ 
+h2 <- function(deg_f) {
+#  qgamma(pi / 6, shape = 1, rate = deg_f)
+  qgamma(pi / 6, deg_f, deg_f)
+}
+spearman_from_param2 <- function(param, deg_f = 2) {
+  asin(param * sin(h(deg_f))) / h2(deg_f)
+}
+
+```
 
 [1]: http://homes.chass.utoronto.ca/~weiliu/copuladist6new1.pdf "Wei Liu - Currencies Portfolio Return: A Copula Methodology"
